@@ -3,42 +3,12 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from data.models import Facult, Course, Group
 
 
-class Facult(models.Model):
-    name = models.CharField('Факультет', max_length=100)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = 'Факультет'
-        verbose_name_plural = 'Факультеты'
+# ___________________________________________________________________________________________________________
 
 
-class Course(models.Model):
-    name = models.CharField('Курс', max_length=5)
-
-    def __str__(self):
-        return f"{self.name} курс"
-
-    class Meta:
-        verbose_name = 'Курс'
-        verbose_name_plural = 'Курсы'
-
-
-class Group(models.Model):
-    name = models.CharField('Группа', max_length=5)
-
-    def __str__(self):
-        return f"{self.name} группа"
-
-    class Meta:
-        verbose_name = 'Группа'
-        verbose_name_plural = 'Группы'
-
-
-# __________________________________________________________________________________________
 class User(AbstractUser):
     password = models.CharField(max_length=128, null=True, blank=True)
     college_id = models.CharField(max_length=128)
@@ -79,6 +49,7 @@ class Teacher(models.Model):
         verbose_name = 'Преподаватель'
         verbose_name_plural = 'Преподаватели'
 
+# ____________________________________________________________________________________________________
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

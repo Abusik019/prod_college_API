@@ -1,11 +1,11 @@
 from django.contrib import admin
 from django.db.models import Q
-from .models import User, Facult, Course, Group, Student, Teacher
+from .models import User, Student, Teacher
 
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'first_name', 'last_name')
+    list_display = ('first_name', 'last_name', 'is_teacher')
     search_fields = ('first_name', 'last_name')
     exclude = ('email', 'user_permissions', 'groups', 'date_joined', 'last_login')
 
@@ -24,25 +24,19 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Teacher)
 class TeacherAdmin(admin.ModelAdmin):
-    list_display = ('pk',)
+    list_display = ('get_user_name',)
+
+    def get_user_name(self, obj):
+        return f"{obj.teacher.first_name} {obj.teacher.last_name}"
+
+    get_user_name.short_description = 'Teacher Name'
 
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ('pk',)
+    list_display = ('get_user_name', 'facult', 'course', 'group')
 
+    def get_user_name(self, obj):
+        return f"{obj.student.first_name} {obj.student.last_name}"
 
-
-@admin.register(Facult)
-class FacultAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-
-
-@admin.register(Course)
-class CourseAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-
-
-@admin.register(Group)
-class GroupAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    get_user_name.short_description = 'Student Name'
