@@ -3,10 +3,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from data.models import Facult, Course, Group
-
-
-# ___________________________________________________________________________________________________________
+from data.models import Group
 
 
 class User(AbstractUser):
@@ -28,22 +25,16 @@ class User(AbstractUser):
 
 
 class Student(models.Model):
-    student = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student_profile', default=1)
-
-    course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True, blank=True, default='')
-    facult = models.ForeignKey(Facult, on_delete=models.SET_NULL, null=True, blank=True, default='')
-    group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True, default='')
+    student = models.OneToOneField(User, on_delete=models.SET_NULL, related_name='student_profile', null=True)
+    group = models.ForeignKey(Group, on_delete=models.SET_NULL, related_name='student_group', blank=True, null=True)
 
     class Meta:
         verbose_name = 'Студент'
         verbose_name_plural = 'Студенты'
 
 class Teacher(models.Model):
-    teacher = models.OneToOneField(User, on_delete=models.CASCADE, related_name='teacher_profile', default=1)
-
-    facult = models.ManyToManyField(Facult, related_name='teachers', blank=True)
-    groups = models.ManyToManyField(Group, related_name='teachers', blank=True)
-    courses = models.ManyToManyField(Course, related_name='teachers', blank=True)
+    teacher = models.OneToOneField(User, on_delete=models.SET_NULL, related_name='teacher_profile', null=True)
+    group = models.ManyToManyField(Group, related_name='teacher_groups', blank=True, null=True)
 
     class Meta:
         verbose_name = 'Преподаватель'

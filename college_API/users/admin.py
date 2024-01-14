@@ -34,7 +34,7 @@ class TeacherAdmin(admin.ModelAdmin):
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ('get_user_name', 'facult', 'course', 'group')
+    list_display = ('get_user_name', 'group')
 
     def get_user_name(self, obj):
         return f"{obj.student.first_name} {obj.student.last_name}"

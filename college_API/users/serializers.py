@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import User
+from .models import User, Student, Teacher
 
 
 class CustomLoginSerializer(serializers.Serializer):
@@ -39,6 +39,7 @@ class CustomLoginSerializer(serializers.Serializer):
         except User.DoesNotExist:
             raise serializers.ValidationError({'college_id': 'Пользователь не найден.'})
 
+# ______________________________________________________________________________________________________________
 
 class UserSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
@@ -46,3 +47,43 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'first_name', 'last_name', 'image', 'is_teacher', 'user']
+
+
+class StudentSerializer(serializers.ModelSerializer):
+    student = serializers.SerializerMethodField('get_user_info')
+
+    def get_user_info(self, obj):
+        user = obj.student
+        user_data = {
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'image': user.image,
+        }
+        return user_data
+
+    class Meta:
+        model = Student
+        fields = ['id', 'student', 'group']
+
+
+class TeacherSerializer(serializers.ModelSerializer):
+    teacher = serializers.SerializerMethodField('get_user_info')
+
+    def get_user_info(self, obj):
+        user = obj.teacher
+        user_data = {
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'image': user.image,
+        }
+        return user_data
+
+    class Meta:
+        model = Teacher
+        fields = ['id', 'teacher', 'group']
+
+
+class TeacherUpdateSerializer(serializers.Serializer):
+    course = serializers.ListField(child=serializers.IntegerField(), required=False)
+    group = serializers.ListField(child=serializers.IntegerField(), required=False)
+    facult = serializers.ListField(child=serializers.IntegerField(), required=False)
