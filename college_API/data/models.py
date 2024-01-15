@@ -1,5 +1,7 @@
+from datetime import timezone
 from django.db import models
 
+# from users.models import User
 
 
 class Facult(models.Model):
@@ -44,6 +46,20 @@ class PodGroup(models.Model):
         verbose_name_plural = 'Подгруппы'
 
 
+class Subject(models.Model):
+    name = models.CharField('Название предмета', max_length=100)
+
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Предмет'
+        verbose_name_plural = 'Предметы'
+
+
 class Group(models.Model):
     facult = models.ForeignKey(Facult, on_delete=models.SET_NULL, null=True, blank=True, default='', related_name='groups_facult')
     course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True, blank=True, default='', related_name='groups_course')
@@ -58,3 +74,21 @@ class Group(models.Model):
     class Meta:
         verbose_name = 'Группа'
         verbose_name_plural = 'Группы'
+
+
+# ____________________________________________________________________________________________________________
+
+
+# class Lecture(models.Model):
+#     title = models.CharField('Название', max_length=300)
+#     description = models.TextField('Описание')
+#     lecturer = models.ForeignKey(User, verbose_name='Лектор', related_name='lecturer', on_delete=models.SET_NULL)
+#     group = models.ManyToManyField(Group, blank=True, default='')
+#     created_at = models.DateTimeField(default=timezone.now)
+#
+#     def __str__(self):
+#         return self.title
+#
+#     class Meta:
+#         verbose_name = 'Лекция'
+#         verbose_name_plural = 'Лекции'

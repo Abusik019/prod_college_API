@@ -2,13 +2,17 @@ from django.views.decorators.cache import cache_page
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import RetrieveAPIView, UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.response import Response
 from rest_framework import status
 
 from .models import User, Student, Teacher
+from .permissions import IsTeacherPermission
 from .serializers import CustomLoginSerializer, UserSerializer, StudentSerializer, TeacherSerializer, \
     UserUpdatePhotoSerializer
+from data.serializers import GroupSerializer
+from data.models import Subject
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -48,11 +52,17 @@ class UserDetailView(RetrieveAPIView):
 
 
 class UserUpdatePhotoView(UpdateAPIView):
+    '''
+    {
+        'image': 'test'
+    }
+    '''
     queryset = User.objects.all()
     serializer_class = UserUpdatePhotoSerializer
     permission_classes = [IsAuthenticated]
 
-# __________________________________________________
+
+# ________________________________________________________________________________________________________
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -68,7 +78,7 @@ class StudentDetailView(RetrieveAPIView):
     serializer_class = StudentSerializer
     permission_classes = [IsAuthenticated]
 
-# __________________________________________________
+# ________________________________________________________________________________________________________
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -85,10 +95,15 @@ class TeacherDetailView(RetrieveAPIView):
     permission_classes = [IsAuthenticated]
 
 
-class TeacherUpdateView(UpdateAPIView):
+class TeacherAddGroupsView(UpdateAPIView):
+    '''
+    {
+        'group_ids': [5, 6]
+    }
+    '''
     queryset = Teacher.objects.all()
     serializer_class = TeacherSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsTeacherPermission]
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -105,6 +120,46 @@ class TeacherUpdateView(UpdateAPIView):
             instance.group.remove(group_id)
 
         serializer = self.get_serializer(instance)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class TeacherSubjectsView(UpdateAPIView):
+    '''
+    {
+        "subject_ids": [1, 2]
+    }
+    '''
+    queryset = Teacher.objects.all()
+    serializer_class = TeacherSerializer
+    permission_classes = [IsAuthenticated, IsTeacherPermission]
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        new_subject_ids = request.data.get('subject_ids', [])
+        current_subject_ids = list(instance.subjects.values_list('id', flat=True))
+
+        subjects_to_add = set(new_subject_ids) - set(current_subject_ids)
+        subjects_to_remove = set(current_subject_ids) - set(new_subject_ids)
+
+        for subject_id in subjects_to_add:
+            subject = Subject.objects.get(id=subject_id)
+            instance.subjects.add(subject)
+
+        for subject_id in subjects_to_remove:
+            subject = Subject.objects.get(id=subject_id)
+            instance.subjects.remove(subject)
+
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class TeacherGroupsView(APIView):
+    permission_classes = [IsAuthenticated, IsTeacherPermission]
+
+    def get(self, request, *args, **kwargs):
+        teacher = Teacher.objects.get(teacher=request.user)
+        groups = teacher.group.all()
+        serializer = GroupSerializer(groups, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 

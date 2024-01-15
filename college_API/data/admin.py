@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Facult, Course, PodGroup, Group
+from .models import Facult, Course, PodGroup, Group, Subject
 
 
 @admin.register(Facult)
@@ -14,6 +14,11 @@ class CourseAdmin(admin.ModelAdmin):
 
 @admin.register(PodGroup)
 class PodGroupAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+
+
+@admin.register(Subject)
+class SubjectAdmin(admin.ModelAdmin):
     list_display = ('name',)
 
 

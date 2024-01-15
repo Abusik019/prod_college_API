@@ -96,6 +96,7 @@ class StudentSerializer(serializers.ModelSerializer):
 class TeacherSerializer(serializers.ModelSerializer):
     teacher = serializers.SerializerMethodField('get_user_info')
     group = serializers.SerializerMethodField('get_group')
+    subjects = serializers.SerializerMethodField('get_subjects_names')
 
     def get_user_info(self, obj):
         user = obj.teacher
@@ -109,9 +110,12 @@ class TeacherSerializer(serializers.ModelSerializer):
     def get_group(self, obj):
         return GroupSerializer(obj.group.all(), many=True).data
 
+    def get_subjects_names(self, obj):
+        return [subject.name for subject in obj.subjects.all()]
+
     class Meta:
         model = Teacher
-        fields = ['id', 'teacher', 'group']
+        fields = ['id', 'teacher', 'subjects', 'group']
 
 
 # _____________________________________________________
