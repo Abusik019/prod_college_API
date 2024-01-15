@@ -2,6 +2,8 @@ from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import User, Student, Teacher
 
+from data.serializers import GroupSerializer
+
 
 class CustomLoginSerializer(serializers.Serializer):
     first_name = serializers.CharField()
@@ -41,16 +43,35 @@ class CustomLoginSerializer(serializers.Serializer):
 
 # ______________________________________________________________________________________________________________
 
+
 class UserSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    group = serializers.SerializerMethodField('get_group')
 
     class Meta:
         model = User
-        fields = ['id', 'first_name', 'last_name', 'image', 'is_teacher', 'user']
+        fields = ['id', 'first_name', 'last_name', 'image', 'is_teacher', 'user', 'group']
+
+    def get_group(self, obj):
+        if obj.is_teacher:
+            return GroupSerializer(obj.teacher_profile.group.all(), many=True).data
+        elif hasattr(obj, 'student_profile') and obj.student_profile.group:
+            return GroupSerializer(obj.student_profile.group).data
+        return None
+
+
+class UserUpdatePhotoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['image']
+
+
+# _____________________________________________________
 
 
 class StudentSerializer(serializers.ModelSerializer):
     student = serializers.SerializerMethodField('get_user_info')
+    group = serializers.SerializerMethodField('get_group')
 
     def get_user_info(self, obj):
         user = obj.student
@@ -61,13 +82,20 @@ class StudentSerializer(serializers.ModelSerializer):
         }
         return user_data
 
+    def get_group(self, obj):
+        return GroupSerializer(obj.group).data if obj.group else None
+
     class Meta:
         model = Student
         fields = ['id', 'student', 'group']
 
 
+# _____________________________________________________
+
+
 class TeacherSerializer(serializers.ModelSerializer):
     teacher = serializers.SerializerMethodField('get_user_info')
+    group = serializers.SerializerMethodField('get_group')
 
     def get_user_info(self, obj):
         user = obj.teacher
@@ -78,12 +106,13 @@ class TeacherSerializer(serializers.ModelSerializer):
         }
         return user_data
 
+    def get_group(self, obj):
+        return GroupSerializer(obj.group.all(), many=True).data
+
     class Meta:
         model = Teacher
         fields = ['id', 'teacher', 'group']
 
 
-class TeacherUpdateSerializer(serializers.Serializer):
-    course = serializers.ListField(child=serializers.IntegerField(), required=False)
-    group = serializers.ListField(child=serializers.IntegerField(), required=False)
-    facult = serializers.ListField(child=serializers.IntegerField(), required=False)
+# _____________________________________________________
+

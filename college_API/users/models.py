@@ -34,7 +34,7 @@ class Student(models.Model):
 
 class Teacher(models.Model):
     teacher = models.OneToOneField(User, on_delete=models.SET_NULL, related_name='teacher_profile', null=True)
-    group = models.ManyToManyField(Group, related_name='teacher_groups', blank=True, null=True)
+    group = models.ManyToManyField(Group, related_name='teacher_groups', blank=True)
 
     class Meta:
         verbose_name = 'Преподаватель'
