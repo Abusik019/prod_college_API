@@ -17,6 +17,7 @@ services:
 
     depends_on:
       - database
+      - redis
 
   database:
     image: postgres:14.6-alpine
@@ -24,3 +25,8 @@ services:
       - POSTGRES_DB=dbname
       - POSTGRES_USER=dbuser
       - POSTGRES_PASSWORD=pass
+
+  redis:
+    image: redis:7.2.4-alpine
+    ports:
+      - "6379:6379"
