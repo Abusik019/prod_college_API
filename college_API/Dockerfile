@@ -1,11 +1,13 @@
 FROM python:3.10-slim
 
 RUN mkdir /project
-WORKDIR /project
+WORKDIR /project/
 
-ADD . /project/
-ADD .env.docker /project/.env
+COPY . /project/
 
 RUN pip install -r requirements.txt
 
-CMD ["gunicorn", "config.wsgi:application", "-b", "0.0.0.0:8000"]
+EXPOSE 80
+
+CMD ["python", "manage.py", "runserver", "0.0.0.0:80"]
+
