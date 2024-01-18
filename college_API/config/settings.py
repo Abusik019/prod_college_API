@@ -15,15 +15,22 @@ import os
 from dotenv import load_dotenv
 
 
+# ______________________________________________________________________________________________
 
 load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 SECRET_KEY = os.getenv('SECRET_KEY')
 
+DB_NAME = os.getenv('DB_NAME')
+DB_USER = os.getenv('DB_USER')
+DB_PASS = os.getenv('DB_PASS')
+DB_HOST = os.getenv('DB_HOST')
 
+
+SECRET_KEY = SECRET_KEY
 DEBUG = True
-
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 INSTALLED_APPS = [
@@ -41,6 +48,8 @@ INSTALLED_APPS = [
     'data',
     'news',
 ]
+
+# ______________________________________________________________________________________________
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -72,14 +81,29 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+# ______________________________________________________________________________________________
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': DB_NAME,
+        'USER': DB_USER,
+        'PASSWORD': DB_PASS,
+        'HOST': DB_HOST,
     }
 }
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379",
+        "OPTIONS": {
+            "db": "1",
+        },
+    }
+}
+
+# ______________________________________________________________________________________________
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -97,24 +121,24 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
 
 AUTH_USER_MODEL = 'users.User'
 
 STATIC_URL = 'static/'
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [STATIC_DIR]
+
+# ______________________________________________________________________________________________
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -128,6 +152,7 @@ REST_FRAMEWORK = {
     ),
 }
 
+# ______________________________________________________________________________________________
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
@@ -168,9 +193,3 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
-
-
-try:
-    from .local_settings import *
-except ImportError:
-    from .prod_settings import *
