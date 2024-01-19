@@ -1,13 +1,13 @@
 from django.views.decorators.cache import cache_page
 from rest_framework import status
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView, DestroyAPIView, UpdateAPIView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Group, Subject, Lecture
-from .serializers import GroupSerializer, SubjectsSelializers, CreateLectureSerializer
+from .serializers import GroupSerializer, SubjectsSelializers, CreateLectureSerializer, LectureSerializer
 from users.models import Student, Teacher
 from users.permissions import IsTeacherPermission
 
@@ -67,6 +67,9 @@ def subjects_list(request):
     return Response(serializer.data)
 
 
+# _________________________________________________________________________________________________________________
+
+
 class CreateLectureView(CreateAPIView):
     queryset = Lecture.objects.all()
     serializer_class = CreateLectureSerializer
@@ -74,3 +77,42 @@ class CreateLectureView(CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(lecturer=self.request.user.teacher_profile)
+
+
+class TeacherLecturesView(ListAPIView):
+    serializer_class = LectureSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        teacher_id = self.kwargs['teacher_id']
+        return Lecture.objects.filter(lecturer__id=teacher_id)
+
+
+class LectureDetailView(ListAPIView):
+    serializer_class = LectureSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        lecture_id = self.kwargs['lecture_id']
+        return Lecture.objects.filter(id=lecture_id)
+
+
+class MyLecturesView(ListAPIView):
+    serializer_class = LectureSerializer
+    permission_classes = [IsAuthenticated, IsTeacherPermission]
+
+    def get_queryset(self):
+        teacher = self.request.user.teacher_profile
+        return Lecture.objects.filter(lecturer=teacher)
+
+
+class DeleteLectureView(DestroyAPIView):
+    queryset = Lecture.objects.all()
+    serializer_class = LectureSerializer
+    permission_classes = [IsAuthenticated, IsTeacherPermission]
+
+
+class UpdateLectureView(UpdateAPIView):
+    queryset = Lecture.objects.all()
+    serializer_class = CreateLectureSerializer
+    permission_classes = [IsAuthenticated]

@@ -3,9 +3,9 @@ from .models import Group, Subject, Lecture
 
 
 class GroupSerializer(serializers.ModelSerializer):
-    facult_name = serializers.SerializerMethodField()
-    course_name = serializers.SerializerMethodField()
-    podgroup_name = serializers.SerializerMethodField()
+    facult_name = serializers.SerializerMethodField('get_facult_name')
+    course_name = serializers.SerializerMethodField('get_course_name')
+    podgroup_name = serializers.SerializerMethodField('get_podgroup_name')
 
     class Meta:
         model = Group
@@ -28,6 +28,9 @@ class SubjectsSelializers(serializers.ModelSerializer):
         fields = '__all__'
 
 
+# ______________________________________________________________________________________________________________
+
+
 class CreateLectureSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lecture
@@ -42,9 +45,47 @@ class CreateLectureSerializer(serializers.ModelSerializer):
 
         for group in groups_list:
             if group not in teacher.group.all():
-                return 'Error'
+                return {
+                    'status': 'error',
+                    'detail': 'Это не ваша группа'
+                }
 
         lecture = Lecture.objects.create(**validated_data)
         lecture.group.set(groups_data)
 
         return lecture
+
+    def update(self, instance, validated_data):
+        instance.title = validated_data.get('title', instance.title)
+        instance.image = validated_data.get('image', instance.image)
+        instance.description = validated_data.get('description', instance.description)
+        instance.file = validated_data.get('file', instance.file)
+
+        groups_data = validated_data.get('group', [])
+        instance.group.set(groups_data)
+
+        user = self.context['request'].user
+        if hasattr(user, 'teacher_profile'):
+            instance.lecturer = user.teacher_profile
+
+        instance.save()
+        return instance
+
+
+class LectureSerializer(serializers.ModelSerializer):
+    file = serializers.SerializerMethodField('get_file')
+    image = serializers.SerializerMethodField('get_image')
+    description = serializers.SerializerMethodField('get_description')
+
+    class Meta:
+        model = Lecture
+        fields = ['id', 'title', 'image', 'description', 'file', 'lecturer', 'group', 'created_at']
+
+    def get_image(self, obj):
+        return obj.image if obj.image != '' else None
+
+    def get_description(self, obj):
+        return obj.description if obj.description != '' else None
+
+    def get_file(self, obj):
+        return obj.file if obj.file != '' else None
