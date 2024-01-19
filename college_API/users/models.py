@@ -28,6 +28,9 @@ class Student(models.Model):
     student = models.OneToOneField(User, on_delete=models.SET_NULL, related_name='student_profile', null=True)
     group = models.ForeignKey(Group, on_delete=models.SET_NULL, related_name='student_group', blank=True, null=True)
 
+    def __str__(self):
+        return f'{self.student}'
+
     class Meta:
         verbose_name = 'Студент'
         verbose_name_plural = 'Студенты'
@@ -37,6 +40,9 @@ class Teacher(models.Model):
     teacher = models.OneToOneField(User, on_delete=models.SET_NULL, related_name='teacher_profile', null=True)
     subjects = models.ManyToManyField(Subject, related_name='teacher_subject', blank=True)
     group = models.ManyToManyField(Group, related_name='teacher_groups', blank=True)
+
+    def __str__(self):
+        return f'{self.teacher}'
 
     class Meta:
         verbose_name = 'Преподаватель'

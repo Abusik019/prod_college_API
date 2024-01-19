@@ -11,13 +11,20 @@ services:
       - DB_NAME=dbname
       - DB_USER=dbuser
       - DB_PASS=pass
-
     command: > 
-      sh -c "python manage.py runserver 0.0.0.0:8000"
-
+      sh -c "gunicorn --bind 0.0.0.0:8000 config.wsgi"
     depends_on:
       - database
       - redis
+
+  nginx:
+    image: nginx:1.25.3-alpine
+    depends_on:
+      - college-app
+    ports:
+      - "80:80"
+    volumes:
+      -
 
   database:
     image: postgres:14.6-alpine

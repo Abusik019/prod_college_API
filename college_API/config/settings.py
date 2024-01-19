@@ -31,6 +31,7 @@ DB_HOST = os.getenv('DB_HOST')
 SECRET_KEY = SECRET_KEY
 DEBUG = True
 ALLOWED_HOSTS = ['127.0.0.1']
+CSRF_TRUSTED_ORIGINS = []
 
 
 INSTALLED_APPS = [
@@ -96,7 +97,8 @@ DATABASES = {
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": "redis://redis:6379",
+        # "LOCATION": "redis://redis:6379",
+        "LOCATION": "redis://127.0.0.1:6379",
         "OPTIONS": {
             "db": "1",
         },

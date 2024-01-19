@@ -1,13 +1,15 @@
 from django.views.decorators.cache import cache_page
 from rest_framework import status
+from rest_framework.generics import CreateAPIView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Group, Subject
-from .serializers import GroupSerializer, SubjectsSelializers
+from .models import Group, Subject, Lecture
+from .serializers import GroupSerializer, SubjectsSelializers, CreateLectureSerializer
 from users.models import Student, Teacher
+from users.permissions import IsTeacherPermission
 
 
 @api_view(['GET'])
@@ -63,3 +65,12 @@ def subjects_list(request):
     queryset = Subject.objects.all()
     serializer = SubjectsSelializers(queryset, many=True)
     return Response(serializer.data)
+
+
+class CreateLectureView(CreateAPIView):
+    queryset = Lecture.objects.all()
+    serializer_class = CreateLectureSerializer
+    permission_classes = [IsAuthenticated, IsTeacherPermission]
+
+    def perform_create(self, serializer):
+        serializer.save(lecturer=self.request.user.teacher_profile)

@@ -1,7 +1,7 @@
-from datetime import timezone
+from django.utils import timezone
 from django.db import models
 
-# from users.models import User
+from django.apps import apps
 
 
 class Facult(models.Model):
@@ -79,16 +79,19 @@ class Group(models.Model):
 # ____________________________________________________________________________________________________________
 
 
-# class Lecture(models.Model):
-#     title = models.CharField('Название', max_length=300)
-#     description = models.TextField('Описание')
-#     lecturer = models.ForeignKey(User, verbose_name='Лектор', related_name='lecturer', on_delete=models.SET_NULL)
-#     group = models.ManyToManyField(Group, blank=True, default='')
-#     created_at = models.DateTimeField(default=timezone.now)
-#
-#     def __str__(self):
-#         return self.title
-#
-#     class Meta:
-#         verbose_name = 'Лекция'
-#         verbose_name_plural = 'Лекции'
+class Lecture(models.Model):
+    title = models.CharField('Название', max_length=300)
+    image = models.CharField('Изображение', null=True, blank=True)
+    description = models.TextField('Описание', null=True, blank=True)
+    file = models.CharField('Файл', null=True, blank=True)
+
+    lecturer = models.ForeignKey('users.Teacher', verbose_name='Лектор', related_name='lecturer', on_delete=models.CASCADE)
+    group = models.ManyToManyField(Group, blank=True, default='')
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Лекция'
+        verbose_name_plural = 'Лекции'
