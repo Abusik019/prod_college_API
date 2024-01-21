@@ -12,7 +12,7 @@ services:
       - DB_USER=dbuser
       - DB_PASS=pass
     command: > 
-      sh -c "gunicorn --bind 0.0.0.0:8000 config.wsgi"
+      sh -c "python manage.py migrate && gunicorn --bind 0.0.0.0:8000 config.wsgi"
     depends_on:
       - database
       - redis
@@ -23,6 +23,7 @@ services:
       - college-app
     ports:
       - "80:80"
+    restart: always
     volumes:
       -
 
