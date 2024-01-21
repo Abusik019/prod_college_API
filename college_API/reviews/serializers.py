@@ -15,6 +15,10 @@ class ReviewSerializer(serializers.ModelSerializer):
         data['author_id'] = instance.author.id if instance.author else None
         return data
 
+    def get_comments_for_lecture(self, lecture_id):
+        comments = Review.objects.filter(lecture_id=lecture_id)
+        return self.to_representation(comments, many=True)
+
     class Meta:
         model = Review
-        fields = ['author', 'lecture', 'parent', 'text', 'created_at']
+        fields = ['id', 'author', 'lecture', 'parent', 'text', 'created_at']
