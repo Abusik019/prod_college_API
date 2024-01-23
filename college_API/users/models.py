@@ -11,6 +11,7 @@ class User(AbstractUser):
     college_id = models.CharField(max_length=128)
     first_name = models.CharField(max_length=150, default='-')
     last_name = models.CharField(max_length=150, default='-')
+    email = email = models.EmailField(blank=True, null=True)
     username = models.CharField(unique=True, max_length=150, null=True, blank=True)
     image = models.CharField(null=True, blank=True)
 

@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'drf_yasg',
+    'django_celery_beat',
+    'celery',
 
     'users',
     'data',
@@ -83,6 +85,22 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+
+CELERY_BEAT_SCHEDULE = {
+    'DeleteExams': {
+        'task': 'exams.tasks.delete_expired_exams',
+        'schedule': 60,
+        'options': {
+            'expires': 60,
+        },
+    },
+}
+
+CELERYBEAT_SCHEDULE_FILENAME = 'celerybeat-schedule'
+CELERYBEAT_LOG_LEVEL = 'debug'
 
 # ______________________________________________________________________________________________
 
