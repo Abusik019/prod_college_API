@@ -13,9 +13,11 @@
 </head>
 <!--    Не забыть подвязать ссылку на сам экзамен   -->
 <body>
-    <h1>Новый экзамен создан!</h1>
-    <p>Экзамен "{{ exam_title }}" был создан.</p>
-    <p>Начало: {{ exam_start_time }}</p>
-    <p>Конец: {{ exam_end_time }}</p>
+    <h1 style="color: red;">У вас новый экзамен!</h1>
+    <h2>"{{ exam_title }}" от {{ author_name }} {{ author_surname }} был создан. Успейте пройти.</h2>
+    <div>
+        <h3>С {{ exam_start_time }} до {{ exam_end_time }}.</h3>
+        <p>Продолжительность экзамена: {{ exam_time }} минут.</p>
+    </div>
 </body>
 </html>

@@ -6,7 +6,7 @@ from django.template.loader import render_to_string
 from users.models import Student
 
 
-def send_exam_notification(sender, instance, created, **kwargs):
+def send_exam_notification(instance, created, **kwargs):
     if created:
         subject = 'Новый экзамен создан'
         message = f'Экзамен "{instance.title}" был создан. Начало: {instance.start_time}, Конец: {instance.end_time}'
@@ -20,9 +20,12 @@ def send_exam_notification(sender, instance, created, **kwargs):
         end_time_moscow = instance.end_time.astimezone(moscow_tz)
 
         html_message = render_to_string('exam_created_email.html', {
+            'author_name': instance.author.teacher.first_name,
+            'author_surname': instance.author.teacher.last_name,
             'exam_title': instance.title,
-            'exam_start_time': start_time_moscow.strftime('%m-%d %H:%M'),
-            'exam_end_time': end_time_moscow.strftime('%m-%d %H:%M'),
+            'exam_time': instance.time,
+            'exam_start_time': start_time_moscow.strftime('%B-%d | %H:%M |'),
+            'exam_end_time': end_time_moscow.strftime('%B-%d | %H:%M |'),
         })
 
         send_mail(subject, message, from_email, recipient_list, fail_silently=False, html_message=html_message)

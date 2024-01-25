@@ -14,4 +14,4 @@ class CreateExamView(CreateAPIView):
 
     def perform_create(self, serializer):
            exam = serializer.save()
-           send_exam_notification(sender=Exam, instance=exam, created=True)
+           send_exam_notification(instance=exam, created=True)
