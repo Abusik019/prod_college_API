@@ -39,6 +39,7 @@ class GroupMembersView(APIView):
                 'id': student.id,
                 'first_name': student.student.first_name,
                 'last_name': student.student.last_name,
+                'email': student.student.email,
                 'image': student.student.image,
             })
 

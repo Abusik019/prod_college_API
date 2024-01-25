@@ -1,6 +1,6 @@
 from django.views.decorators.cache import cache_page
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.generics import RetrieveAPIView, UpdateAPIView
+from rest_framework.generics import RetrieveAPIView, UpdateAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -10,7 +10,7 @@ from rest_framework import status
 from .models import User, Student, Teacher
 from .permissions import IsTeacherPermission
 from .serializers import CustomLoginSerializer, UserSerializer, StudentSerializer, TeacherSerializer, \
-    UserUpdatePhotoSerializer
+    UserUpdatePhotoSerializer, UserUpdateEmailSerializer
 from data.serializers import GroupSerializer
 from data.models import Subject
 
@@ -61,6 +61,16 @@ class UserUpdatePhotoView(UpdateAPIView):
     serializer_class = UserUpdatePhotoSerializer
     permission_classes = [IsAuthenticated]
 
+
+class UserUpdateEmailView(UpdateAPIView):
+    '''
+    {
+        'email': 'test'
+    }
+    '''
+    queryset = User.objects.all()
+    serializer_class = UserUpdateEmailSerializer
+    permission_classes = [IsAuthenticated]
 
 # ________________________________________________________________________________________________________
 
@@ -161,6 +171,18 @@ class TeacherGroupsView(APIView):
         groups = teacher.group.all()
         serializer = GroupSerializer(groups, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class MyGroupView(ListAPIView):
+    serializer_class = GroupSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        student = self.request.user.student_profile
+        if student.group:
+            return [student.group]
+        else:
+            return []
 
 
 # ________________________________________________________________________________________________________

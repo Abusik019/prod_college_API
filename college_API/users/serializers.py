@@ -50,7 +50,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'first_name', 'last_name', 'image', 'is_teacher', 'user', 'group']
+        fields = ['id', 'first_name', 'last_name', 'email', 'image', 'is_teacher', 'user', 'group']
 
     def get_group(self, obj):
         if obj.is_teacher:
@@ -66,6 +66,12 @@ class UserUpdatePhotoSerializer(serializers.ModelSerializer):
         fields = ['image']
 
 
+class UserUpdateEmailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['email']
+
+
 # _____________________________________________________
 
 
@@ -78,6 +84,7 @@ class StudentSerializer(serializers.ModelSerializer):
         user_data = {
             'first_name': user.first_name,
             'last_name': user.last_name,
+            'email': user.email,
             'image': user.image,
         }
         return user_data
@@ -103,6 +110,7 @@ class TeacherSerializer(serializers.ModelSerializer):
         user_data = {
             'first_name': user.first_name,
             'last_name': user.last_name,
+            'email': user.email,
             'image': user.image,
         }
         return user_data
