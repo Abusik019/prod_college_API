@@ -11,7 +11,7 @@ class User(AbstractUser):
     college_id = models.CharField(max_length=128)
     first_name = models.CharField(max_length=150, default='-')
     last_name = models.CharField(max_length=150, default='-')
-    email = email = models.EmailField(blank=True, null=True)
+    email = email = models.EmailField(blank=True, null=True, default='')
     username = models.CharField(unique=True, max_length=150, null=True, blank=True)
     image = models.CharField(null=True, blank=True)
 
@@ -60,6 +60,7 @@ def create_user_profile(sender, instance, created, **kwargs):
             Teacher.objects.create(teacher=instance)
         else:
             Student.objects.create(student=instance)
+
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
