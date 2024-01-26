@@ -1,4 +1,4 @@
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 
 from .models import Exam
@@ -15,3 +15,15 @@ class CreateExamView(CreateAPIView):
     def perform_create(self, serializer):
            exam = serializer.save()
            send_exam_notification(instance=exam, created=True)
+
+
+class UpdateExamView(UpdateAPIView):
+    queryset = Exam.objects.all()
+    serializer_class = ExamSerializer
+    permission_classes = [IsAuthenticated, IsTeacherPermission]
+
+
+class DestroyExamView(DestroyAPIView):
+    queryset = Exam.objects.all()
+    serializer_class = ExamSerializer
+    permission_classes = [IsAuthenticated, IsTeacherPermission]
