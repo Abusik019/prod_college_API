@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Exam, Question, Answer
+from .models import Exam, Question, Answer, ExamResult
 from django_celery_beat.models import PeriodicTask, IntervalSchedule
 
 
@@ -14,24 +14,33 @@ class QuestionInline(admin.TabularInline):
     inlines = [AnswerInline]
 
 
+# __________________________________________________________________________________________________________________
+
+
+@admin.register(Exam)
 class ExamAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'start_time', 'end_time')
     filter_horizontal = ('groups',)
     inlines = [QuestionInline]
 
 
+@admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
     list_display = ('text', 'exam')
     inlines = [AnswerInline]
 
 
+@admin.register(Answer)
 class AnswerAdmin(admin.ModelAdmin):
     list_display = ('text', 'question', 'is_correct')
 
 
-admin.site.register(Exam, ExamAdmin)
-admin.site.register(Question, QuestionAdmin)
-admin.site.register(Answer, AnswerAdmin)
+@admin.register(ExamResult)
+class ExamResultAdmin(admin.ModelAdmin):
+    list_display = ('exam', 'student', 'score')
+
+
+# ________________________________________________________________________________________________________________
 
 
 schedule, created = IntervalSchedule.objects.get_or_create(every=60, period=IntervalSchedule.SECONDS)

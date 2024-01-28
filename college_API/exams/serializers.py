@@ -1,12 +1,12 @@
 from rest_framework import serializers
 
-from .models import Answer, Question, Exam
+from .models import Answer, Question, Exam, ExamResult
 
 
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
-        fields = ['text', 'is_correct']
+        fields = ['id', 'text', 'is_correct']
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -14,7 +14,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ['text', 'answers']
+        fields = ['id', 'text', 'answers']
 
 
 class ExamSerializer(serializers.ModelSerializer):
@@ -64,6 +64,12 @@ class ExamSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+
+
+class ExamResultSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExamResult
+        fields = ['exam', 'student', 'score']
 
 
 # _______________________________________________________________________________________________________________

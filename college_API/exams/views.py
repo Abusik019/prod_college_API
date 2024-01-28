@@ -1,10 +1,14 @@
 from rest_framework.generics import CreateAPIView, UpdateAPIView, DestroyAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 from .models import Exam
 from .permissions import IsTeacherPermission
-from .serializers import ExamSerializer
+from .serializers import ExamSerializer, ExamResultSerializer
 from .email_senders import send_exam_notification
+from .utils import calculate_exam_score
 
 
 class CreateExamView(CreateAPIView):
@@ -49,3 +53,32 @@ class StudentExamsView(ListAPIView):
         if hasattr(user, 'student_profile'):
             return Exam.objects.filter(groups=user.student_profile.group)
         return Exam.objects.none()
+
+
+class PassExamView(APIView):
+    '''
+    {
+        "answers": [
+            {"question_id": 1, "selected_answer_id": 1}
+        ]
+    }
+    '''
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        user = self.request.user
+        student = user.student_profile
+
+        exam_id = self.kwargs.get('exam_id')
+        try:
+            exam = Exam.objects.get(id=exam_id)
+        except Exam.DoesNotExist:
+            return Response({'error': 'Exam not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        answers_data = request.data.get('answers', [])
+        score = calculate_exam_score(answers_data)
+        serializer = ExamResultSerializer(data={'exam': exam_id, 'student': student.id, 'score': score})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
