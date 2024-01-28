@@ -26,11 +26,11 @@ def calculate_exam_score(answers_data):
 
     if percentage_correct < 30:
         return 2
-    elif 30 <= percentage_correct < 60:
+    elif 40 <= percentage_correct < 70:
         return 3
-    elif 60 <= percentage_correct < 80:
+    elif 70 <= percentage_correct < 90:
         return 4
-    elif 80 <= percentage_correct <= 100:
+    elif 90 <= percentage_correct <= 100:
         return 5
     else:
         return None
