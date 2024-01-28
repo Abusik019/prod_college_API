@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import CreateExamView, UpdateExamView, DestroyExamView, TeacherExamsView
+from .views import CreateExamView, UpdateExamView, DestroyExamView, TeacherExamsView, StudentExamsView
 
 
 urlpatterns = [
@@ -8,4 +8,5 @@ urlpatterns = [
     path('update_exam/<int:pk>', UpdateExamView.as_view(), name='update_exam'),
     path('delete_exam/<int:pk>', DestroyExamView.as_view(), name='delete_exam'),
     path('my_exams/', TeacherExamsView.as_view(), name='my_exams'),
+    path('my_exams_student/', StudentExamsView.as_view(), name='my_exams_student'),
 ]

@@ -38,3 +38,14 @@ class TeacherExamsView(ListAPIView):
         if hasattr(user, 'teacher_profile'):
             return Exam.objects.filter(author=user.teacher_profile)
         return Exam.objects.none()
+
+
+class StudentExamsView(ListAPIView):
+    serializer_class = ExamSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        if hasattr(user, 'student_profile'):
+            return Exam.objects.filter(groups=user.student_profile.group)
+        return Exam.objects.none()
