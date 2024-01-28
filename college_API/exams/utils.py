@@ -21,7 +21,6 @@ def calculate_exam_score(answers_data):
 
         if correct_answer:
             correct_answers += 1
-
     percentage_correct = (correct_answers / total_questions) * 100
 
     if percentage_correct < 30:

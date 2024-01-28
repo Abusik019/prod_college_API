@@ -47,7 +47,7 @@ class Answer(models.Model):
 
 
 class ExamResult(models.Model):
-    exam = models.ForeignKey(Exam, on_delete=models.SET_NULL, null=True, related_name='results')
+    exam = models.ForeignKey(Exam, on_delete=models.CASCADE, related_name='results')
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='exam_results')
     score = models.IntegerField(null=True, blank=True)
 

@@ -72,6 +72,12 @@ class ExamResultSerializer(serializers.ModelSerializer):
         fields = ['exam', 'student', 'score']
 
 
+class ExamStudentResultSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExamResult
+        fields = ['exam', 'student', 'score']
+
+
 # _______________________________________________________________________________________________________________
 
 
