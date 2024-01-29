@@ -29,3 +29,28 @@ def send_exam_notification(instance, created, **kwargs):
         })
 
         send_mail(subject, message, from_email, recipient_list, fail_silently=False, html_message=html_message)
+
+
+def send_result_notification(instance, created, **kwargs):
+    if created:
+        student = instance.student
+        student_name = student.student.first_name
+        student_surname = student.student.last_name
+
+        subject = 'Студент прошел экзамен'
+        message = f'Студент {student_name} {student_surname} прошел экзамен "{instance.exam.title}"'
+
+        from_email = EMAIL_HOST_USER
+        teacher = instance.exam.author
+        recipient_list = [teacher.teacher.email]
+
+        html_message = render_to_string('exam_result_email.html', {
+            'teacher_name': teacher.teacher.first_name,
+            'teacher_surname': teacher.teacher.last_name,
+            'student_name': student_name,
+            'student_surname': student_surname,
+            'exam_result_score': instance.score,
+            'exam_title': instance.exam.title,
+        })
+
+        send_mail(subject, message, from_email, recipient_list, fail_silently=False, html_message=html_message)

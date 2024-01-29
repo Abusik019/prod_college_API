@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from .models import Exam, ExamResult
 from .permissions import IsTeacherPermission
 from .serializers import ExamSerializer, ExamResultSerializer
-from .email_senders import send_exam_notification
+from .email_senders import send_exam_notification, send_result_notification
 from .utils import calculate_exam_score
 
 
@@ -74,7 +74,8 @@ class PassExamView(APIView):
         score = calculate_exam_score(answers_data)
         serializer = ExamResultSerializer(data={'exam': exam_id, 'student': student.id, 'score': score})
         if serializer.is_valid():
-            serializer.save()
+            result = serializer.save()
+            send_result_notification(instance=result, created=True)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
