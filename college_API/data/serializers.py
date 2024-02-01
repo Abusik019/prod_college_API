@@ -32,9 +32,10 @@ class SubjectsSelializers(serializers.ModelSerializer):
 
 
 class CreateLectureSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Lecture
-        fields = ['title', 'image', 'description', 'file', 'group']
+        fields = ['id', 'title', 'image', 'description', 'file', 'group']
 
     def create(self, validated_data):
         teacher = self.context['request'].user.teacher_profile
@@ -45,10 +46,7 @@ class CreateLectureSerializer(serializers.ModelSerializer):
 
         for group in groups_list:
             if group not in teacher.group.all():
-                return {
-                    'status': 'error',
-                    'detail': 'Это не ваша группа'
-                }
+                raise serializers.ValidationError('Это не ваша группа')
 
         lecture = Lecture.objects.create(**validated_data)
         lecture.group.set(groups_data)

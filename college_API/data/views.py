@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from .email_senders import lecture_create_notification
 from .models import Group, Subject, Lecture
 from .serializers import GroupSerializer, SubjectsSelializers, CreateLectureSerializer, LectureSerializer
 from users.models import Student, Teacher
@@ -77,7 +78,8 @@ class CreateLectureView(CreateAPIView):
     permission_classes = [IsAuthenticated, IsTeacherPermission]
 
     def perform_create(self, serializer):
-        serializer.save(lecturer=self.request.user.teacher_profile)
+        lecture = serializer.save(lecturer=self.request.user.teacher_profile)
+        lecture_create_notification(instance=lecture, created=True)
 
 
 class TeacherLecturesView(ListAPIView):
