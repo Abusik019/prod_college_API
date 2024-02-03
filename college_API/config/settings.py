@@ -30,8 +30,8 @@ DB_HOST = os.getenv('DB_HOST')
 
 SECRET_KEY = SECRET_KEY
 DEBUG = True
-ALLOWED_HOSTS = ['127.0.0.1']
-CSRF_TRUSTED_ORIGINS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'b0a4-185-59-245-108.ngrok-free.app']
+CSRF_TRUSTED_ORIGINS = ['https://b0a4-185-59-245-108.ngrok-free.app']
 
 
 INSTALLED_APPS = [
@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django_celery_beat',
     'celery',
+    'corsheaders',
 
     'users',
     'data',
@@ -64,7 +65,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'config.urls'
 

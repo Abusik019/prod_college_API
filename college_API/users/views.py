@@ -1,7 +1,7 @@
 from django.views.decorators.cache import cache_page
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.generics import RetrieveAPIView, UpdateAPIView, ListAPIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.generics import RetrieveAPIView, UpdateAPIView, ListAPIView, CreateAPIView
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.response import Response
@@ -183,6 +183,12 @@ class MyGroupView(ListAPIView):
             return [student.group]
         else:
             return []
+
+
+class CreateUser(CreateAPIView):
+    queryset = User.objects.all()
+    permission_classes = [IsAdminUser,]
+    serializer_class = UserSerializer
 
 
 # ________________________________________________________________________________________________________

@@ -16,7 +16,7 @@ def lecture_create_notification(instance, created, **kwargs):
         message = f'{lecturer_name} {lecturer_surname} выложил(а) новую лекцию.'
         from_email = EMAIL_HOST_USER
 
-        recipient = [student.student.email for student in instance.group.student_set.all()]
+        recipient = [student.student.email for group in instance.group.all() for student in group.student_group.all()]
 
         moscow_tz = pytz.timezone('Europe/Moscow')
         time_moscow = instance.created_at.astimezone(moscow_tz)
