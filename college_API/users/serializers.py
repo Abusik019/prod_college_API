@@ -59,6 +59,12 @@ class UserSerializer(serializers.ModelSerializer):
             return GroupSerializer(obj.student_profile.group).data
         return None
 
+    def create(self, validated_data):
+        user = validated_data.pop('user')
+        instance = super().create(validated_data)
+
+        return instance
+
 
 class UserUpdatePhotoSerializer(serializers.ModelSerializer):
     class Meta:
