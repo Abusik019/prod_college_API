@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from datetime import timedelta
 from pathlib import Path
 import os
+
 from dotenv import load_dotenv
 
 
@@ -30,8 +31,8 @@ DB_HOST = os.getenv('DB_HOST')
 
 SECRET_KEY = SECRET_KEY
 DEBUG = True
-ALLOWED_HOSTS = ['127.0.0.1', 'b0a4-185-59-245-108.ngrok-free.app']
-CSRF_TRUSTED_ORIGINS = ['https://b0a4-185-59-245-108.ngrok-free.app']
+ALLOWED_HOSTS = ['127.0.0.1', '5df5-185-244-21-106.ngrok-free.app']
+CSRF_TRUSTED_ORIGINS = ['https://5df5-185-244-21-106.ngrok-free.app']
 
 
 INSTALLED_APPS = [
@@ -46,7 +47,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django_celery_beat',
     'celery',
-    # 'corsheaders',
+    'corsheaders',
 
     'users',
     'data',
@@ -60,15 +61,13 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'corsheaders.middleware.CorsMiddleware',
 ]
-
-# CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'config.urls'
 
@@ -87,6 +86,15 @@ TEMPLATES = [
         },
     },
 ]
+
+# ______________________________________________________________________________________________
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    'http://127.0.0.1:5500',
+]
+
+# ______________________________________________________________________________________________
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
@@ -189,8 +197,8 @@ REST_FRAMEWORK = {
 # ______________________________________________________________________________________________
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=14),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
     "UPDATE_LAST_LOGIN": False,

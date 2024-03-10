@@ -74,6 +74,7 @@ class UserUpdateEmailView(UpdateAPIView):
 
 # ________________________________________________________________________________________________________
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 @cache_page(60)
@@ -89,6 +90,7 @@ class StudentDetailView(RetrieveAPIView):
     permission_classes = [IsAuthenticated]
 
 # ________________________________________________________________________________________________________
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
