@@ -5,6 +5,9 @@ from django.apps import apps
 
 
 class Facult(models.Model):
+    """
+    Модель факультета.
+    """
     name = models.CharField('Факультет', max_length=100)
 
     def __str__(self):
@@ -19,6 +22,9 @@ class Facult(models.Model):
 
 
 class Course(models.Model):
+    """
+    Модель курса.
+    """
     name = models.CharField('Курс', max_length=5)
 
     def __str__(self):
@@ -33,6 +39,9 @@ class Course(models.Model):
 
 
 class PodGroup(models.Model):
+    """
+    Модель подгруппы.
+    """
     name = models.CharField('Группа', max_length=5)
 
     def __str__(self):
@@ -47,6 +56,9 @@ class PodGroup(models.Model):
 
 
 class Subject(models.Model):
+    """
+    Модель дисциплины.
+    """
     name = models.CharField('Название предмета', max_length=100)
 
     def __str__(self):
@@ -61,6 +73,9 @@ class Subject(models.Model):
 
 
 class Group(models.Model):
+    """
+    Модель группы(факультет, курс, подгруппа)
+    """
     facult = models.ForeignKey(Facult, on_delete=models.SET_NULL, null=True, blank=True, default='', related_name='groups_facult')
     course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True, blank=True, default='', related_name='groups_course')
     podgroup = models.ForeignKey(PodGroup, on_delete=models.SET_NULL, null=True, blank=True, default='', related_name='groups_podgroup')
@@ -80,12 +95,18 @@ class Group(models.Model):
 
 
 class Lecture(models.Model):
+    """
+    Модель лекции
+    (название, изображение, содержание, файл, автор, группа/группы, дата создания)
+    """
     title = models.CharField('Название', max_length=300)
     image = models.CharField('Изображение', null=True, blank=True)
     description = models.TextField('Описание', null=True, blank=True)
     file = models.CharField('Файл', null=True, blank=True)
 
-    lecturer = models.ForeignKey('users.Teacher', verbose_name='Лектор', related_name='lecturer', on_delete=models.CASCADE)
+    lecturer = models.ForeignKey('users.Teacher', verbose_name='Лектор',
+                                 related_name='lecturer', on_delete=models.CASCADE)
+
     group = models.ManyToManyField(Group, blank=True, default='')
     created_at = models.DateTimeField(default=timezone.now)
 

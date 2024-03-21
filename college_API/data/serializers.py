@@ -1,8 +1,14 @@
 from rest_framework import serializers
+from rest_framework.response import Response
+from rest_framework import status
+
 from .models import Group, Subject, Lecture
 
 
 class GroupSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор группы (факультет, курс, подгруппа)
+    """
     facult_name = serializers.SerializerMethodField('get_facult_name')
     course_name = serializers.SerializerMethodField('get_course_name')
     podgroup_name = serializers.SerializerMethodField('get_podgroup_name')
@@ -22,7 +28,9 @@ class GroupSerializer(serializers.ModelSerializer):
 
 
 class SubjectsSelializers(serializers.ModelSerializer):
-
+    """
+    Сериализатор дисциплины.
+    """
     class Meta:
         model = Subject
         fields = '__all__'
@@ -32,21 +40,26 @@ class SubjectsSelializers(serializers.ModelSerializer):
 
 
 class CreateLectureSerializer(serializers.ModelSerializer):
-
+    """
+    Сериализатор для создания лекции
+    """
     class Meta:
         model = Lecture
         fields = ['id', 'title', 'image', 'description', 'file', 'group']
 
     def create(self, validated_data):
-        teacher = self.context['request'].user.teacher_profile
+        """
+        Переопределение метода create.
+        """
+        teacher = self.context['request'].user.teacher_profile  # Извлечение учителя из запроса.
         validated_data['lecturer'] = teacher
 
-        groups_data = validated_data.pop('group', [])
+        groups_data = validated_data.pop('group', [])           # Извлечение групп из запроса в массив.
         groups_list = list(groups_data)
 
-        for group in groups_list:
-            if group not in teacher.group.all():
-                raise serializers.ValidationError('Это не ваша группа')
+        for group in groups_list:                   # Цикл перебирающий все группы из массива
+            if group not in teacher.group.all():    # Проверка на то, ведет ли препод занятия в этой группе
+                return Response
 
         lecture = Lecture.objects.create(**validated_data)
         lecture.group.set(groups_data)
