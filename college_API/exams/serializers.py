@@ -4,12 +4,19 @@ from .models import Answer, Question, Exam, ExamResult
 
 
 class AnswerSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для модели Answer.
+    """
     class Meta:
         model = Answer
         fields = ['id', 'text', 'is_correct']
 
 
 class QuestionSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для модели Question.
+    """
+    # Сериализатор вложенной модели Answer, который будет использоваться для вложенного представления ответов
     answers = AnswerSerializer(many=True)
 
     class Meta:
@@ -18,6 +25,9 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 
 class ExamSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор экзамена.
+    """
     questions = QuestionSerializer(many=True)
 
     class Meta:

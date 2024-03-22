@@ -17,8 +17,8 @@ class CreateExamView(CreateAPIView):
     permission_classes = [IsAuthenticated, IsTeacherPermission]
 
     def perform_create(self, serializer):
-           exam = serializer.save()
-           send_exam_notification(instance=exam, created=True)
+        exam = serializer.save()
+        send_exam_notification(instance=exam, created=True)
 
 
 class UpdateExamView(UpdateAPIView):
