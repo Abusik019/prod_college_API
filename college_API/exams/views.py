@@ -12,28 +12,43 @@ from .utils import calculate_exam_score
 
 
 class CreateExamView(CreateAPIView):
+    """
+    API endpoint для создания экзамена.
+    """
     queryset = Exam.objects.all()
     serializer_class = ExamSerializer
     permission_classes = [IsAuthenticated, IsTeacherPermission]
 
     def perform_create(self, serializer):
+        """
+        Переопределение метода perform_create для отправки уведомления после создания экзамена.
+        """
         exam = serializer.save()
         send_exam_notification(instance=exam, created=True)
 
 
 class UpdateExamView(UpdateAPIView):
+    """
+    API endpoint для обновления экзамена.
+    """
     queryset = Exam.objects.all()
     serializer_class = ExamSerializer
     permission_classes = [IsAuthenticated, IsTeacherPermission]
 
 
 class DestroyExamView(DestroyAPIView):
+    """
+    API endpoint для удаления экзамена.
+    """
     queryset = Exam.objects.all()
     serializer_class = ExamSerializer
     permission_classes = [IsAuthenticated, IsTeacherPermission]
 
 
 class TeacherExamsView(ListAPIView):
+    """
+    API endpoint для получения списка экзаменов учителя.
+    """
     serializer_class = ExamSerializer
     permission_classes = [IsAuthenticated, IsTeacherPermission]
 
@@ -45,6 +60,9 @@ class TeacherExamsView(ListAPIView):
 
 
 class StudentExamsView(ListAPIView):
+    """
+    API endpoint для получения списка экзаменов студента.
+    """
     serializer_class = ExamSerializer
     permission_classes = [IsAuthenticated]
 
@@ -57,6 +75,7 @@ class StudentExamsView(ListAPIView):
 
 class PassExamView(APIView):
     '''
+    API endpoint для прохождения экзамена студентом.
     {
         "answers": [
             {"question_id": 1, "selected_answer_id": 1}
@@ -81,6 +100,10 @@ class PassExamView(APIView):
 
 
 class StudentResultsView(ListAPIView):
+    """
+    API endpoint для просмотра результатов экзаменов студента.
+    """
+
     serializer_class = ExamResultSerializer
     permission_classes = [IsAuthenticated]
 
@@ -90,6 +113,10 @@ class StudentResultsView(ListAPIView):
 
 
 class TeacherResultsView(ListAPIView):
+    """
+    API endpoint для просмотра результатов экзаменов преподавателя.
+    """
+
     serializer_class = ExamResultSerializer
     permission_classes = [IsAuthenticated, IsTeacherPermission]
 

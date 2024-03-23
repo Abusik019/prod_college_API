@@ -2,6 +2,10 @@ from .models import Question
 
 
 def calculate_exam_score(answers_data):
+    """
+    Функция для расчета баллов за экзамен.
+    Принимает данные ответов на вопросы.
+    """
     total_questions = len(answers_data)
     if total_questions == 0:
         return None
