@@ -5,11 +5,17 @@ from .models import User, Student, Teacher
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
+    """
+    Администратор пользователей.
+    """
     list_display = ('first_name', 'last_name', 'is_teacher')
     search_fields = ('first_name', 'last_name')
     exclude = ('user_permissions', 'groups', 'date_joined', 'last_login')
 
     def get_search_results(self, request, queryset, search_term):
+        """
+        Переопределение метода для поиска пользователей по имени и фамилии.
+        """
         queryset, use_distinct = super().get_search_results(request, queryset, search_term)
         search_term = search_term.strip()
         if search_term:
@@ -24,9 +30,15 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Teacher)
 class TeacherAdmin(admin.ModelAdmin):
+    """
+    Администратор преподавателей.
+    """
     list_display = ('get_user_name',)
 
     def get_user_name(self, obj):
+        """
+        Возвращает имя и фамилию преподавателя.
+        """
         return f"{obj.teacher.first_name} {obj.teacher.last_name}"
 
     get_user_name.short_description = 'Teacher Name'
@@ -34,9 +46,15 @@ class TeacherAdmin(admin.ModelAdmin):
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
+    """
+    Администратор студентов.
+    """
     list_display = ('get_user_name', 'group')
 
     def get_user_name(self, obj):
+        """
+        Возвращает имя и фамилию студента.
+        """
         return f"{obj.student.first_name} {obj.student.last_name}"
 
     get_user_name.short_description = 'Student Name'

@@ -7,14 +7,16 @@ from data.models import Group, Subject
 
 
 class User(AbstractUser):
+    """
+    Пользовательская модель пользователя.
+    """
     password = models.CharField(max_length=128, null=True, blank=True)
     college_id = models.CharField(max_length=128)
     first_name = models.CharField(max_length=150, default='-')
     last_name = models.CharField(max_length=150, default='-')
-    email = email = models.EmailField(blank=True, null=True, default='')
+    email = models.EmailField(blank=True, null=True, default='')
     username = models.CharField(unique=True, max_length=150, null=True, blank=True)
     image = models.CharField(null=True, blank=True)
-
     is_teacher = models.BooleanField(default=False)
 
     def __str__(self):
@@ -26,6 +28,9 @@ class User(AbstractUser):
 
 
 class Student(models.Model):
+    """
+    Модель студента.
+    """
     student = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student_profile', null=True)
     group = models.ForeignKey(Group, on_delete=models.SET_NULL, related_name='student_group', blank=True, null=True)
 
@@ -38,6 +43,9 @@ class Student(models.Model):
 
 
 class Teacher(models.Model):
+    """
+    Модель преподавателя.
+    """
     teacher = models.OneToOneField(User, on_delete=models.CASCADE, related_name='teacher_profile', null=True)
     subjects = models.ManyToManyField(Subject, related_name='teacher_subject', blank=True)
     group = models.ManyToManyField(Group, related_name='teacher_groups', blank=True)
@@ -55,6 +63,9 @@ class Teacher(models.Model):
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
+    """
+    Создание профиля пользователя после сохранения.
+    """
     if created:
         if instance.is_teacher:
             Teacher.objects.create(teacher=instance)
@@ -64,6 +75,9 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
+    """
+    Сохранение профиля пользователя после изменения.
+    """
     if instance.is_teacher:
         instance.teacher_profile.save()
     else:
