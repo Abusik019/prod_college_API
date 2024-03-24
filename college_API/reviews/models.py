@@ -6,6 +6,9 @@ from data.models import Lecture
 
 
 class Review(models.Model):
+    """
+    Модель комментария.
+    """
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='review_author')
     lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE, related_name='review')
     parent = models.ForeignKey('self', on_delete=models.SET_NULL, verbose_name='parent', blank=True, null=True)

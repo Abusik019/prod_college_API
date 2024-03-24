@@ -3,6 +3,9 @@ from django.utils import timezone
 
 
 class News(models.Model):
+    """
+    Модель новостей.
+    """
     title = models.CharField('Название', max_length=150)
     description = models.CharField('Описание')
     image = models.CharField('Изображение')
