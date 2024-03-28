@@ -102,8 +102,8 @@ CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 
 CELERY_BEAT_SCHEDULE = {
-    'DeleteExams': {
-        'task': 'exams.tasks.delete_expired_exams',
+    'EndedExams': {
+        'task': 'exams.tasks.end_expired_exams',
         'schedule': 60,
         'options': {
             'expires': 60,

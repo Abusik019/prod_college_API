@@ -12,6 +12,7 @@ class Exam(models.Model):
     author = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='exams', verbose_name='Автор')
     groups = models.ManyToManyField(Group, related_name='exams', verbose_name='Группы')
     time = models.IntegerField('Время на выполнение')
+    ended = models.BooleanField('Закончился', default=False)
     start_time = models.DateTimeField(verbose_name='Дата и время начала', default=timezone.now)
     end_time = models.DateTimeField(verbose_name='Дата и время окончания', default=timezone.now)
 

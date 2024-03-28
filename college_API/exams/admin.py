@@ -49,18 +49,18 @@ class ExamResultAdmin(admin.ModelAdmin):
 # Получаем или создаем интервальное расписание выполнения задачи
 schedule, created = IntervalSchedule.objects.get_or_create(every=60, period=IntervalSchedule.SECONDS)
 
-# Проверяем, существует ли уже периодическая задача с именем 'DeleteExams'
-existing_task = PeriodicTask.objects.filter(name='DeleteExams').first()
+# Проверяем, существует ли уже периодическая задача с именем 'EndedExams'
+existing_task = PeriodicTask.objects.filter(name='EndedExams').first()
 
 # Если задача уже существует, обновляем ее параметры
 if existing_task:
     existing_task.interval = schedule  # Обновляем интервал выполнения задачи
-    existing_task.task = 'exams.tasks.delete_expired_exams'  # Обновляем функцию-обработчик задачи
+    existing_task.task = 'exams.tasks.end_expired_exams'  # Обновляем функцию-обработчик задачи
     existing_task.save()  # Сохраняем обновленную задачу
 else:
     # Если задачи еще нет, создаем новую
     exams = PeriodicTask.objects.create(
         interval=schedule,  # Устанавливаем интервал выполнения задачи
-        name='DeleteExams',  # Устанавливаем имя задачи
-        task='tasks.delete_expired_exams'  # Устанавливаем функцию-обработчик задачи
+        name='EndedExams',  # Устанавливаем имя задачи
+        task='tasks.end_expired_exams'  # Устанавливаем функцию-обработчик задачи
     )

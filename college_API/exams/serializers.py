@@ -32,7 +32,7 @@ class ExamSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Exam
-        fields = ['id', 'title', 'groups', 'time', 'start_time', 'end_time', 'questions']
+        fields = ['id', 'title', 'groups', 'time', 'ended', 'start_time', 'end_time', 'questions']
 
     def create(self, validated_data):
         """
