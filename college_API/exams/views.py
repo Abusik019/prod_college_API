@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from .models import Exam, ExamResult
-from .permissions import IsTeacherPermission
+from .permissions import IsTeacherPermission, GroupPermission, ExamIsEndedPermission
 from .serializers import ExamSerializer, ExamResultSerializer
 from .email_senders import send_exam_notification, send_result_notification
 from .utils import calculate_exam_score
@@ -82,7 +82,7 @@ class PassExamView(APIView):
         ]
     }
     '''
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, GroupPermission, ExamIsEndedPermission]
 
     def post(self, request, *args, **kwargs):
         user = self.request.user
