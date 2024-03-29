@@ -1,4 +1,4 @@
-from rest_framework.generics import CreateAPIView, UpdateAPIView, DestroyAPIView, ListAPIView
+from rest_framework.generics import CreateAPIView, UpdateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework.views import APIView
@@ -71,6 +71,18 @@ class StudentExamsView(ListAPIView):
         if hasattr(user, 'student_profile'):
             return Exam.objects.filter(groups=user.student_profile.group)
         return Exam.objects.none()
+
+
+class GetExam(ListAPIView):
+    """
+    API endpoint для просмотра экзаменов препода.
+    """
+    serializer_class = ExamSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        teacher_id = self.kwargs['pk']
+        return Exam.objects.filter(author=teacher_id)
 
 
 class PassExamView(APIView):
