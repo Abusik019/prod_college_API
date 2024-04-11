@@ -1,7 +1,6 @@
-<div style='margin-left: 40%;'><img src='https://law.dgu.ru/college/styles/img/logo2.jpg'></div>
+<div align="center"><img src='https://law.dgu.ru/college/styles/img/logo2.jpg'></div>
 
-# <center>API сайта колледжа ДГУ</center>
-
+<h1 align="center">API сайта колледжа ДГУ</h1>
 ---
 
 <center><b>Стек бэкенда:</b></center>     
@@ -28,7 +27,7 @@
 
 ---
 
-# <center>Функционал</center>
+<h1 align="center">Функционал</h1>
 
 **users**
 - Авторизация (JWT)
@@ -87,6 +86,6 @@
 
 ---
 
-# <center>Схема БД</center>
+<h1 align="center">Схема БД</h1>
 
 <img src='https://i.ibb.co/2nLHGG0/Copy-of-Untitled-Diagram.png'>
