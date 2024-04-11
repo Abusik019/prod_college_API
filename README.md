@@ -1,4 +1,4 @@
-<center><img src='https://law.dgu.ru/college/styles/img/logo2.jpg'></center>
+<div><img src='https://law.dgu.ru/college/styles/img/logo2.jpg'></div>
 
 <center><h1>API сайта колледжа ДГУ</h1></center>
 <hr>
