@@ -1,7 +1,6 @@
 <div align="center"><img src='https://law.dgu.ru/college/styles/img/logo2.jpg'></div>
 
 <h1 align="center">API сайта колледжа ДГУ</h1>
----
 
 <center><b>Стек бэкенда:</b></center>     
 
