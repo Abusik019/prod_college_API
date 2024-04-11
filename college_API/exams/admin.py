@@ -49,6 +49,7 @@ class ExamResultAdmin(admin.ModelAdmin):
 # Получаем или создаем интервальное расписание выполнения задачи
 schedule, created = IntervalSchedule.objects.get_or_create(every=60, period=IntervalSchedule.SECONDS)
 
+
 # Проверяем, существует ли уже периодическая задача с именем 'EndedExams'
 existing_task = PeriodicTask.objects.filter(name='EndedExams').first()
 

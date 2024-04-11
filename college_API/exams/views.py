@@ -73,7 +73,7 @@ class StudentExamsView(ListAPIView):
         return Exam.objects.none()
 
 
-class GetExam(ListAPIView):
+class StartExam(ListAPIView):
     """
     API endpoint для просмотра экзаменов препода.
     """
@@ -83,6 +83,9 @@ class GetExam(ListAPIView):
     def get_queryset(self):
         teacher_id = self.kwargs['pk']
         return Exam.objects.filter(author=teacher_id)
+
+
+# class StartExam()
 
 
 class PassExamView(APIView):

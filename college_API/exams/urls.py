@@ -9,7 +9,7 @@ from .views import (
     StudentExamsView,
     StudentResultsView,
     TeacherResultsView,
-    GetExam,
+    StartExam,
 )
 
 
@@ -17,7 +17,7 @@ urlpatterns = [
     # Путь для прохождения экзамена
     path('passing_exam/<int:exam_id>', PassExamView.as_view(), name='passing_exam'),
     # Путь для просмотра экзамена
-    path('get_exam/<int:pk>', GetExam.as_view(), name='get_exam'),
+    path('start_exam/<int:pk>', StartExam.as_view(), name='start_exam'),
 
     # Пути для создания, обновления и удаления экзамена
     path('create_exam', CreateExamView.as_view(), name='create_exam'),

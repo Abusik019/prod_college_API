@@ -32,7 +32,26 @@ class ExamSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Exam
-        fields = ['id', 'title', 'groups', 'time', 'ended', 'start_time', 'end_time', 'questions']
+        fields = ['id', 'title', 'groups', 'quantity_questions', 'time', 'ended', 'start_time', 'end_time', 'questions']
+
+    def remove_is_correct(self, data):
+        """
+        Удаление поля is_correct из данных.
+        """
+        if isinstance(data, dict):
+            return {key: self.remove_is_correct(value) for key, value in data.items() if key != 'is_correct'}
+        elif isinstance(data, list):
+            return [self.remove_is_correct(item) for item in data]
+        return data
+
+    def to_representation(self, instance):
+        """
+        Переопределение метода to_representation для фильтрации полей.
+        """
+        data = super().to_representation(instance)
+        # Удаление поля is_correct из данных о вопросах
+        data['questions'] = self.remove_is_correct(data['questions'])
+        return data
 
     def create(self, validated_data):
         """

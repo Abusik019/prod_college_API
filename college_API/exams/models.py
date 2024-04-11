@@ -11,6 +11,7 @@ class Exam(models.Model):
     title = models.CharField(max_length=255, verbose_name='Название теста')
     author = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='exams', verbose_name='Автор')
     groups = models.ManyToManyField(Group, related_name='exams', verbose_name='Группы')
+    quantity_questions = models.IntegerField('Количество вопросов')
     time = models.IntegerField('Время на выполнение')
     ended = models.BooleanField('Закончился', default=False)
     start_time = models.DateTimeField(verbose_name='Дата и время начала', default=timezone.now)
