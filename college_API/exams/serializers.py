@@ -34,6 +34,18 @@ class ExamSerializer(serializers.ModelSerializer):
         model = Exam
         fields = ['id', 'title', 'groups', 'quantity_questions', 'time', 'ended', 'start_time', 'end_time', 'questions']
 
+    def to_representation(self, instance):
+        """
+        Переопределение метода to_representation для фильтрации полей.
+        """
+        if self.context.get('view') and self.context['view'].__class__.__name__ == 'GetMyExam':
+            data = super().to_representation(instance)
+            # Удаление поля is_correct из данных о вопросах
+            data['questions'] = self.remove_is_correct(data['questions'])
+            return data
+        else:
+            return super().to_representation(instance)
+
     def remove_is_correct(self, data):
         """
         Удаление поля is_correct из данных.
@@ -120,6 +132,15 @@ class ExamSerializer(serializers.ModelSerializer):
         # Сохранение обновленного экзамена
         instance.save()
         return instance
+
+
+class ExamListSerializer(serializers.ModelSerializer):
+    """
+    Среиализатор для вывода списка экзаменов
+    """
+    class Meta:
+        model = Exam
+        fields = ['id', 'title', 'author', 'groups', 'time', 'start_time', 'end_time', 'ended']
 
 
 class ExamResultSerializer(serializers.ModelSerializer):

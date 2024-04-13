@@ -5,8 +5,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from .models import Exam, ExamResult
-from .permissions import IsTeacherPermission, GroupPermission, ExamIsEndedPermission
-from .serializers import ExamSerializer, ExamResultSerializer
+from .permissions import IsTeacherPermission, GroupPermission, ExamIsEndedPermission, ExamIsPassPermission
+from .serializers import ExamSerializer, ExamResultSerializer, ExamListSerializer
 from .email_senders import send_exam_notification, send_result_notification
 from .utils import calculate_exam_score
 
@@ -49,7 +49,7 @@ class TeacherExamsView(ListAPIView):
     """
     API endpoint для получения списка экзаменов учителя.
     """
-    serializer_class = ExamSerializer
+    serializer_class = ExamListSerializer
     permission_classes = [IsAuthenticated, IsTeacherPermission]
 
     def get_queryset(self):
@@ -63,7 +63,7 @@ class StudentExamsView(ListAPIView):
     """
     API endpoint для получения списка экзаменов студента.
     """
-    serializer_class = ExamSerializer
+    serializer_class = ExamListSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -73,36 +73,60 @@ class StudentExamsView(ListAPIView):
         return Exam.objects.none()
 
 
-class StartExam(ListAPIView):
+class GetListTeacherExams(ListAPIView):
     """
     API endpoint для просмотра экзаменов препода.
     """
-    serializer_class = ExamSerializer
+    serializer_class = ExamListSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        user = self.request.user
         teacher_id = self.kwargs['pk']
-        return Exam.objects.filter(author=teacher_id)
+        if hasattr(user, 'student_profile'):
+            return Exam.objects.filter(groups=user.student_profile.group) & Exam.objects.filter(author=teacher_id)
+        return Exam.objects.none()
 
 
-# class StartExam()
+class StartExam(RetrieveAPIView):
+    """
+    API endpoint для начала экзамена.
+    """
+    queryset = Exam.objects.all()
+    serializer_class = ExamSerializer
+    permission_classes = [
+        IsAuthenticated, GroupPermission,
+        ExamIsEndedPermission, ExamIsPassPermission
+    ]
+
+
+class GetMyExam(RetrieveAPIView):
+    """
+    API endpoint для отдельного просмотра экзамена препода.
+    """
+    queryset = Exam.objects.all()
+    serializer_class = ExamSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class PassExamView(APIView):
-    '''
+    """
     API endpoint для прохождения экзамена студентом.
     {
         "answers": [
             {"question_id": 1, "selected_answer_id": 1}
         ]
     }
-    '''
-    permission_classes = [IsAuthenticated, GroupPermission, ExamIsEndedPermission]
+    """
+    permission_classes = [
+        IsAuthenticated, GroupPermission,
+        ExamIsEndedPermission, ExamIsPassPermission
+    ]
 
     def post(self, request, *args, **kwargs):
         user = self.request.user
         student = user.student_profile
-        exam_id = self.kwargs.get('exam_id')
+        exam_id = self.kwargs.get('pk')
 
         answers_data = request.data.get('answers', [])
         score = calculate_exam_score(answers_data)
