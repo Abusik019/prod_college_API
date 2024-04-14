@@ -1,4 +1,10 @@
-from rest_framework.generics import CreateAPIView, UpdateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView
+from rest_framework.generics import (
+    CreateAPIView,
+    UpdateAPIView,
+    DestroyAPIView,
+    ListAPIView,
+    RetrieveAPIView
+)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework.views import APIView
@@ -6,7 +12,7 @@ from rest_framework.response import Response
 
 from .models import Exam, ExamResult
 from .permissions import IsTeacherPermission, GroupPermission, ExamIsEndedPermission, ExamIsPassPermission
-from .serializers import ExamSerializer, ExamResultSerializer, ExamListSerializer
+from .serializers import ExamSerializer, ExamResultSerializer, ExamListSerializer, StartExamSerializer
 from .email_senders import send_exam_notification, send_result_notification
 from .utils import calculate_exam_score
 
@@ -92,8 +98,8 @@ class StartExam(RetrieveAPIView):
     """
     API endpoint для начала экзамена.
     """
+    serializer_class = StartExamSerializer
     queryset = Exam.objects.all()
-    serializer_class = ExamSerializer
     permission_classes = [
         IsAuthenticated, GroupPermission,
         ExamIsEndedPermission, ExamIsPassPermission
@@ -127,9 +133,11 @@ class PassExamView(APIView):
         user = self.request.user
         student = user.student_profile
         exam_id = self.kwargs.get('pk')
+        exam = Exam.objects.filter(pk=exam_id).first()
 
         answers_data = request.data.get('answers', [])
-        score = calculate_exam_score(answers_data)
+        quantity = exam.quantity_questions
+        score = calculate_exam_score(answers_data, quantity)
         serializer = ExamResultSerializer(data={'exam': exam_id, 'student': student.id, 'score': score})
         if serializer.is_valid():
             result = serializer.save()

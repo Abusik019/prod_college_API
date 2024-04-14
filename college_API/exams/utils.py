@@ -1,13 +1,13 @@
 from .models import Question
 
 
-def calculate_exam_score(answers_data):
+def calculate_exam_score(answers_data, quantity):
     """
     Функция для расчета баллов за экзамен.
     Принимает данные ответов на вопросы.
     """
-    total_questions = len(answers_data)
-    if total_questions == 0:
+    print(answers_data)
+    if quantity == 0:
         return None
 
     correct_answers = 0
@@ -25,7 +25,8 @@ def calculate_exam_score(answers_data):
 
         if correct_answer:
             correct_answers += 1
-    percentage_correct = (correct_answers / total_questions) * 100
+        print(f'{correct_answers} - correct_answers')
+    percentage_correct = (correct_answers / quantity) * 100
 
     if percentage_correct < 30:
         return 2

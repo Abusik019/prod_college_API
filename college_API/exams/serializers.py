@@ -1,3 +1,5 @@
+from random import shuffle
+
 from rest_framework import serializers
 
 from .models import Answer, Question, Exam, ExamResult
@@ -24,6 +26,9 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields = ['id', 'text', 'answers']
 
 
+# ___________________________________________________________________________________________________
+
+
 class ExamSerializer(serializers.ModelSerializer):
     """
     Сериализатор экзамена.
@@ -38,7 +43,7 @@ class ExamSerializer(serializers.ModelSerializer):
         """
         Переопределение метода to_representation для фильтрации полей.
         """
-        if self.context.get('view') and self.context['view'].__class__.__name__ == 'GetMyExam':
+        if self.context.get('view') and self.context['view'].__class__.__name__ != 'GetMyExam':
             data = super().to_representation(instance)
             # Удаление поля is_correct из данных о вопросах
             data['questions'] = self.remove_is_correct(data['questions'])
@@ -56,14 +61,15 @@ class ExamSerializer(serializers.ModelSerializer):
             return [self.remove_is_correct(item) for item in data]
         return data
 
-    def to_representation(self, instance):
+    def get_questions(self, obj):
         """
-        Переопределение метода to_representation для фильтрации полей.
+        Метод для определения вопросов экзамена в случайном порядке и ограничения их количества
         """
-        data = super().to_representation(instance)
-        # Удаление поля is_correct из данных о вопросах
-        data['questions'] = self.remove_is_correct(data['questions'])
-        return data
+        questions = list(obj.questions.all())  # Получаем все вопросы экзамена в виде списка
+        shuffle(questions)  # Перемешиваем вопросы
+        quantity = obj.quantity_questions  # Получаем количество вопросов, которое необходимо вывести
+        # Возвращаем только указанное количество вопросов или все вопросы, если их количество меньше указанного
+        return QuestionSerializer(questions[:quantity], many=True).data
 
     def create(self, validated_data):
         """
@@ -108,6 +114,7 @@ class ExamSerializer(serializers.ModelSerializer):
         # Обновление полей экзамена из validated_data
         instance.title = validated_data.get('title', instance.title)
         instance.groups.set(validated_data.get('groups', instance.groups))
+        instance.quantity_questions = validated_data.get('quantity_questions', instance.quantity_questions)
         instance.time = validated_data.get('time', instance.time)
         instance.start_time = validated_data.get('start_time', instance.start_time)
         instance.end_time = validated_data.get('end_time', instance.end_time)
@@ -132,6 +139,33 @@ class ExamSerializer(serializers.ModelSerializer):
         # Сохранение обновленного экзамена
         instance.save()
         return instance
+
+
+# ___________________________________________________________________________________________________
+
+
+class StartExamSerializer(serializers.ModelSerializer):
+    """
+        Сериализатор начала экзамена.
+        """
+    questions = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Exam
+        fields = ['id', 'title', 'groups', 'quantity_questions', 'time', 'ended', 'start_time', 'end_time', 'questions']
+
+    def get_questions(self, obj):
+        """
+        Метод для определения вопросов экзамена в случайном порядке и ограничения их количества
+        """
+        questions = list(obj.questions.all())  # Получаем все вопросы экзамена в виде списка
+        shuffle(questions)  # Перемешиваем вопросы
+        quantity = obj.quantity_questions  # Получаем количество вопросов, которое необходимо вывести
+        # Возвращаем только указанное количество вопросов или все вопросы, если их количество меньше указанного
+        return QuestionSerializer(questions[:quantity], many=True).data
+
+
+# ___________________________________________________________________________________________________
 
 
 class ExamListSerializer(serializers.ModelSerializer):
