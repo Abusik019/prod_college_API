@@ -170,7 +170,7 @@ class StartExamSerializer(serializers.ModelSerializer):
 
 class ExamListSerializer(serializers.ModelSerializer):
     """
-    Среиализатор для вывода списка экзаменов
+    Сериализатор для вывода списка экзаменов
     """
     class Meta:
         model = Exam
