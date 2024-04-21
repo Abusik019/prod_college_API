@@ -1,4 +1,4 @@
-<div align="center"><img src='https://i.ibb.co/KynPGt7/msg-4140878701-36722.jpg'></div>
+<div align="center"><img style='width: 300px;' src='https://i.ibb.co/KynPGt7/msg-4140878701-36722.jpg'></div>
 
 <h1 align="center">API сайта колледжа ДГУ</h1>
 
