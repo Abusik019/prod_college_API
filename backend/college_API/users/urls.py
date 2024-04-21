@@ -29,4 +29,3 @@ urlpatterns = [
 
     path('add_user', CreateUser.as_view(), name='add_user'),    # Добавление пользователя
 ]
-
