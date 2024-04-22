@@ -1,0 +1,60 @@
+.top_block{
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+
+    background: linear-gradient(180deg, #4B4848 0%, #1C1B1B 100%);
+
+    box-sizing: border-box;
+    padding-top: 10px;
+}
+
+
+.userImage{
+    position: absolute;
+
+    right: 25px;
+    top: 46px;
+
+    cursor: pointer;
+
+    background-color: transparent;
+
+    border: none;
+}
+
+.bottom_block{
+    background-color: #2A2A2A;
+}
+
+.navbar{
+    display: flex;
+    justify-content: space-around;
+
+    height: 44px;
+
+    margin: 0;
+}
+
+.navbar li{
+    width: 25%;
+
+    text-align: center;
+
+    line-height: 45px;
+
+    transition: all .5s ease;
+
+    cursor: pointer;
+}
+
+
+.navbar li:hover{
+    background-color: #313131;
+}
+
+.mainLogo{
+    width: 120px;
+    height: 120px;
+}
