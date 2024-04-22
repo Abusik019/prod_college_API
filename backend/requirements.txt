@@ -7,6 +7,7 @@ click==8.1.7
 click-didyoumean==0.3.0
 click-plugins==1.1.1
 click-repl==0.3.0
+colorama==0.4.6
 cron-descriptor==1.4.0
 Django==4.2.9
 django-celery-beat==2.5.0
@@ -15,6 +16,8 @@ django-timezone-field==6.1.0
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.3.1
 drf-yasg==1.21.7
+factory-boy==3.3.0
+Faker==24.11.0
 gunicorn==21.2.0
 inflection==0.5.1
 kombu==5.3.5
