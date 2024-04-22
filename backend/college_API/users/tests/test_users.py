@@ -105,3 +105,35 @@ class UsersTest(APITestCase):
         response = self.client.get(reverse('current_user'), headers=headers)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['id'], self.user1.id)
+
+    def test_my_group(self):
+        if not self.token:
+            self.get_token()
+        headers = {'Authorization': f'Bearer {self.token}'}
+        response = self.client.get(reverse('my_group'), headers=headers)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]['id'], self.user1.student_profile.group.id)
+        self.assertEqual(response.data[0]['facult_name'], self.user1.student_profile.group.facult.name)
+        self.assertEqual(response.data[0]['course_name'], self.user1.student_profile.group.course.name)
+        self.assertEqual(response.data[0]['podgroup_name'], self.user1.student_profile.group.podgroup.name)
+
+    def test_get_students(self):
+        if not self.token:
+            self.get_token()
+        headers = {'Authorization': f'Bearer {self.token}'}
+        response = self.client.get(reverse('get_students'), headers=headers)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[1]['student']['first_name'], self.user1.first_name)
+        self.assertEqual(response.data[1]['student']['last_name'], self.user1.last_name)
+
+    def test_student_detail(self):
+        if not self.token:
+            self.get_token()
+        headers = {'Authorization': f'Bearer {self.token}'}
+        response = self.client.get(reverse('student_detail', kwargs={'pk': self.user1.pk}), headers=headers)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['student']['first_name'], self.user1.first_name)
+        self.assertEqual(response.data['student']['last_name'], self.user1.last_name)
+        self.assertEqual(response.data['group']['facult_name'], self.user1.student_profile.group.facult.name)
+        self.assertEqual(response.data['group']['course_name'], self.user1.student_profile.group.course.name)
+        self.assertEqual(response.data['group']['podgroup_name'], self.user1.student_profile.group.podgroup.name)
