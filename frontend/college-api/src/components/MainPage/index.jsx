@@ -1,6 +1,7 @@
 import "./style.css";
 import { Header } from "./../Header";
 import Slider from "./Slider";
+import { Faculty } from "./Faculty";
 
 function MainPage() {
     return (
@@ -14,6 +15,14 @@ function MainPage() {
                     обеспечивающее высокое качество подготовки специалистов среднего звена для удовлетворения потребностей общества в области права, 
                     охраны окружающей среды и природользования, действующее на основании лицензии университета на право ведения образовательной деятельности.
                 </p>
+            </div>
+            <div className="faculties">
+                <Faculty description={'09.02.07 "Информационные системы и программирование"'}/>
+                {/* <Faculty />
+                <Faculty />
+                <Faculty />
+                <Faculty />
+                <Faculty /> */}
             </div>
         </div>
     );
