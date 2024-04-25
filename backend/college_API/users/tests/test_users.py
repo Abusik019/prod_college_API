@@ -1,3 +1,5 @@
+import random
+
 import factory
 from rest_framework.test import APITestCase
 from rest_framework import status
@@ -35,11 +37,11 @@ class GroupFactory(factory.django.DjangoModelFactory):
 
     @factory.lazy_attribute
     def course(self):
-        return Course.objects.create(name='3')
+        return Course.objects.create(name=f'{random.randint(1, 10)}')
 
     @factory.lazy_attribute
     def podgroup(self):
-        return PodGroup.objects.create(name='1')
+        return PodGroup.objects.create(name=f'{random.randint(1, 10)}')
 
 
 # _________________________________________________________________________________________________________
@@ -61,11 +63,11 @@ class UsersBaseTest(APITestCase):
         self.token_url = reverse('token_obtain_pair')
         self.token = None
 
-    def get_token(self):
+    def get_token(self, user):
         user_data = {
-            'first_name': self.user.first_name,
-            'last_name': self.user.last_name,
-            'college_id': self.user.college_id
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'college_id': user.college_id
         }
         token_response = self.client.post(self.token_url, user_data, format='json')
         self.token = token_response.data['access']
@@ -80,7 +82,7 @@ class UsersTest(UsersBaseTest):
     """
     def test_get_user_list(self):
         if not self.token:
-            self.get_token()
+            self.get_token(self.user)
         headers = {'Authorization': f'Bearer {self.token}'}
         response = self.client.get(reverse('get_users'), headers=headers)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -88,7 +90,7 @@ class UsersTest(UsersBaseTest):
 
     def test_update_photo_user(self):
         if not self.token:
-            self.get_token()
+            self.get_token(self.user)
         headers = {'Authorization': f'Bearer {self.token}'}
         data = {'image': 'test'}
         response = self.client.put(
@@ -100,7 +102,7 @@ class UsersTest(UsersBaseTest):
 
     def test_update_email_user(self):
         if not self.token:
-            self.get_token()
+            self.get_token(self.user)
         headers = {'Authorization': f'Bearer {self.token}'}
         data = {'email': 'test@gmail.com'}
         response = self.client.put(
@@ -112,7 +114,7 @@ class UsersTest(UsersBaseTest):
 
     def test_current_user(self):
         if not self.token:
-            self.get_token()
+            self.get_token(self.user)
         headers = {'Authorization': f'Bearer {self.token}'}
         response = self.client.get(reverse('current_user'), headers=headers)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -130,7 +132,7 @@ class StudentTest(UsersBaseTest):
 
     def test_user_detail(self):
         if not self.token:
-            self.get_token()
+            self.get_token(self.user)
         headers = {'Authorization': f'Bearer {self.token}'}
         response = self.client.get(reverse('user_detail', kwargs={'pk': self.user.pk}), headers=headers)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -145,7 +147,7 @@ class StudentTest(UsersBaseTest):
 
     def test_my_group(self):
         if not self.token:
-            self.get_token()
+            self.get_token(self.user)
         headers = {'Authorization': f'Bearer {self.token}'}
         response = self.client.get(reverse('my_group'), headers=headers)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -156,7 +158,7 @@ class StudentTest(UsersBaseTest):
 
     def test_get_students(self):
         if not self.token:
-            self.get_token()
+            self.get_token(self.user)
         headers = {'Authorization': f'Bearer {self.token}'}
         response = self.client.get(reverse('get_students'), headers=headers)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -165,7 +167,7 @@ class StudentTest(UsersBaseTest):
 
     def test_student_detail(self):
         if not self.token:
-            self.get_token()
+            self.get_token(self.user)
         headers = {'Authorization': f'Bearer {self.token}'}
         response = self.client.get(reverse('student_detail', kwargs={'pk': self.user.pk}), headers=headers)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -189,9 +191,15 @@ class TeacherTest(UsersBaseTest):
         self.teacher.teacher_profile.group.set([self.group])
         self.teacher.teacher_profile.subjects.set([self.subject])
 
+        self.group2 = GroupFactory(
+            facult=GroupFactory.facult,
+            course=GroupFactory.course,
+            podgroup=GroupFactory.podgroup
+        )
+
     def test_get_teachers(self):
         if not self.token:
-            self.get_token()
+            self.get_token(self.user)
         headers = {'Authorization': f'Bearer {self.token}'}
         response = self.client.get(reverse('get_teacher'), headers=headers)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -199,6 +207,26 @@ class TeacherTest(UsersBaseTest):
         self.assertEqual(response.data[0]['subjects'][0], self.teacher.teacher_profile.subjects.first().name)
         self.assertEqual(response.data[0]['group'][0]['facult_name'], self.teacher.teacher_profile.group.first().facult.name)
 
+    def test_teacher_detail(self):
+        if not self.token:
+            self.get_token(self.user)
+        headers = {'Authorization': f'Bearer {self.token}'}
+        response = self.client.get(
+            reverse('teacher_detail', kwargs={'pk': self.teacher.teacher_profile.id}),
+            headers=headers
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['teacher']['first_name'], self.teacher.first_name)
+        self.assertEqual(response.data['subjects'][0], self.teacher.teacher_profile.subjects.first().name)
+        self.assertEqual(response.data['group'][0]['facult_name'], self.teacher.teacher_profile.group.first().facult.name)
 
-
-
+    def test_update_teacher(self):
+        if not self.token:
+            self.get_token(self.teacher)
+        headers = {'Authorization': f'Bearer {self.token}'}
+        data = {"group_ids": [self.group2.id]}
+        response = self.client.put(
+            reverse('teacher_update', kwargs={'pk': self.teacher.teacher_profile.id}),
+            headers=headers, data=data
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
