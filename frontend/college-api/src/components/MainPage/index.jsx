@@ -17,7 +17,7 @@ function MainPage() {
                 </p>
             </div>
             <div className="faculties">
-                <Faculty description={'09.02.07 "Информационные системы и программирование"'}/>
+                <Faculty description='09.02.07 "Информационные системы и программирование"' imagePath="../../../assets/isip2.jfif"/>
                 {/* <Faculty />
                 <Faculty />
                 <Faculty />
