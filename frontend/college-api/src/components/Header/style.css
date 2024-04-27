@@ -4,8 +4,6 @@
     display: flex;
     justify-content: center;
 
-    background: linear-gradient(180deg, #4B4848 0%, #1C1B1B 100%);
-
     box-sizing: border-box;
     padding-top: 10px;
 }
@@ -22,10 +20,6 @@
     background-color: transparent;
 
     border: none;
-}
-
-.bottom_block{
-    background-color: #2A2A2A;
 }
 
 .navbar{
@@ -52,6 +46,7 @@
 
 .navbar li:hover{
     background-color: #313131;
+    color: #fff !important;
 }
 
 .mainLogo{

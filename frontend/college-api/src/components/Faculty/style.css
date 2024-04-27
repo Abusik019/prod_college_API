@@ -4,7 +4,7 @@
     margin: 0 auto;
     margin-top: 50px;
 
-    height: 96px;
+    height: 105px;
 
     display: flex;
     align-items: end;
@@ -16,8 +16,8 @@
 
 .faculty h1{
     font-size: 24px;
-    font-weight: 300;
+    font-weight: 500;
 
     box-sizing: border-box;
-    padding: 0 0 5px 5px;   
+    padding: 0 0 10px 10px;   
 }

@@ -1,16 +1,15 @@
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import MainPage from "./components/MainPage";
-// import ProfilePage from "./components/ProfilePage";
+import { Routes, Route } from "react-router-dom";
+import Main from "./pages/Main";
+import Login from './pages/Login';
+
 
 function App() {
     return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="*" element={<MainPage />} />
-                {/* <Route path='profile' element={<ProfilePage />}/> */}
-            </Routes>
-        </BrowserRouter>
+        <Routes>
+            <Route path="*" element={<Main />} />
+            <Route path='/login' element={<Login />}/>
+        </Routes>
     );
 }
 

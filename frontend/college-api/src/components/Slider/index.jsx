@@ -9,6 +9,8 @@ import './style.css';
 import { Keyboard, Navigation, Mousewheel } from 'swiper/modules'; 
 
 export default function Slider() {
+  // const { mode } = useContext(ThemeContext);
+
   return (
     <>
       <Swiper
