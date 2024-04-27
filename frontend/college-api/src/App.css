@@ -1,6 +1,6 @@
 #root {
   width: 100%;
-  min-height: 100%;
+  /* min-height: 2000px; */
   height: max-content;
   
   margin: 0;
@@ -9,6 +9,8 @@
   display: flex;
   align-items: start;
   justify-content: center;
+
+  background-color: #424242;
 }
 
 .logo {
