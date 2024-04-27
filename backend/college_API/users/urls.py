@@ -22,7 +22,7 @@ urlpatterns = [
     path('student_detail/<int:pk>', StudentDetailView.as_view(), name='student_detail'),    # Информация о студенте
 
     path('get_teachers', teacher_list, name='get_teacher'),     # Получение всех преподов
-    path('teacher_detail/<int:pk>', TeacherDetailView.as_view(), name='get_teacher'),   # Информация о преподе
+    path('teacher_detail/<int:pk>', TeacherDetailView.as_view(), name='teacher_detail'),   # Информация о преподе
     path('teacher_update/<int:pk>', TeacherAddGroupsView.as_view(), name='teacher_update'),     # Обновление групп в которых преподает препод
     path('add_subjects/<int:pk>', TeacherSubjectsView.as_view(), name='add_subjects'),  # Добавление дисциплин преподавателя
     path('my_groups', TeacherGroupsView.as_view(), name='my_groups'),   # Получение групп в которых преподает препод
