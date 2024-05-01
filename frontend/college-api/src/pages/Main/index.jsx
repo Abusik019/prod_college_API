@@ -4,8 +4,9 @@ import { Faculty } from "../../components/Faculty";
 import Slider from "../../components/Slider";
 import { useContext } from "react";
 import { ThemeContext } from "../../components/themeContext";
+import { Footer } from './../../components/Footer';
 
-function MainPage() {
+function Main() {
     const { mode } = useContext(ThemeContext);
 
     return (
@@ -34,12 +35,9 @@ function MainPage() {
                 <a href="https://dgu.ru/Abitur/Files/priem2024/normdoc/pocht_add.pdf" style={{color: mode === "light" ? "#FFF" : "#000"}}>Информация о почтовых адресах для направления документов, необходимых для поступления</a>
                 <a href="https://dgu.ru/Abitur/Files/priem2024/normdoc/VI_ovz.pdf" style={{color: mode === "light" ? "#FFF" : "#000"}}>Особенности проведения ВИ для лиц с ОВЗ и инвалидов</a>
             </div>
-            <div className="line s" style={{background: mode === "light" ? "#FF7A00" : "#000"}}></div>
-            <div className="main_footer">
-                <p>Колледж ДГУ © 2024 Дагестанский государственный университет 367000, г.Махачкала, ул.Дзержинского, 21, тел: (8-722) 67-23-27 Разработка и поддержка сайта: +7(989) 678-91-20, +7(903) 429-40-70</p>
-            </div>
+            <Footer />
         </div>
     );
 }
 
-export default MainPage;
+export default Main;

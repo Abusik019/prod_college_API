@@ -19,10 +19,10 @@ export const Header = () => {
             </div>
             <div className="bottom_block" style={{background: mode === "light" ? "#2A2A2A" : "#CCCCCC"}}>
                 <ul className="navbar">
-                    <li style={{color: mode === "light" ? "#FFF" : "#000"}}>Главная</li>
-                    <li style={{color: mode === "light" ? "#FFF" : "#000"}}>Структура колледжа</li>
-                    <li style={{color: mode === "light" ? "#FFF" : "#000"}}>Нормативные документы</li>
-                    <li style={{color: mode === "light" ? "#FFF" : "#000"}}>Абитурентам</li>
+                    <Link to='/'><li style={{color: mode === "light" ? "#FFF" : "#000"}}>Главная</li></Link>
+                    <Link to='/structure'><li style={{color: mode === "light" ? "#FFF" : "#000"}}>Структура колледжа</li></Link>
+                    <Link to='/'><li style={{color: mode === "light" ? "#FFF" : "#000"}}>Нормативные документы</li></Link>
+                    <Link to='/'><li style={{color: mode === "light" ? "#FFF" : "#000"}}>Абитурентам</li></Link>
                 </ul>
             </div>
         </div>
