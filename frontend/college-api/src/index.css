@@ -13,15 +13,9 @@
 }
 
 a {
-  font-weight: 500;
-  color: #646cff;
   text-decoration: inherit;
+}
 
-  transition: all .3s ease;
-}
-a:hover {
-  color: #FF7A00;
-}
 
 body {
   margin: 0;
