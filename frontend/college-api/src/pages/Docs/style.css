@@ -1,0 +1,22 @@
+.documents{
+    width: 80%;
+    height: max-content;
+}
+
+.docs_content{
+    box-sizing: border-box;
+    padding: 7%;
+}
+
+.docs_content h1{
+   text-align: center;
+   font-size: 36px;
+}
+
+.docs_links{
+    margin-top: 70px;
+
+    display: flex;
+    flex-direction: column;
+    row-gap: 40px;
+}
