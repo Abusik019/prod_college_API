@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.views.decorators.cache import cache_page
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import RetrieveAPIView, UpdateAPIView, ListAPIView, CreateAPIView
@@ -117,6 +118,7 @@ class StudentDetailView(RetrieveAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
     permission_classes = [IsAuthenticated]
+
 
 # ________________________________________________________________________________________________________
 

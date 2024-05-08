@@ -6,7 +6,7 @@ from .views import (
     TeacherDetailView, CurrentUserView,
     TeacherAddGroupsView, TeacherGroupsView,
     TeacherSubjectsView, MyGroupView,
-    UserUpdateEmailView, CreateUser
+    UserUpdateEmailView, CreateUser,
 )
 
 

@@ -191,12 +191,6 @@ class TeacherTest(UsersBaseTest):
         self.teacher.teacher_profile.group.set([self.group])
         self.teacher.teacher_profile.subjects.set([self.subject])
 
-        self.group2 = GroupFactory(
-            facult=GroupFactory.facult,
-            course=GroupFactory.course,
-            podgroup=GroupFactory.podgroup
-        )
-
     def test_get_teachers(self):
         if not self.token:
             self.get_token(self.user)
@@ -221,6 +215,11 @@ class TeacherTest(UsersBaseTest):
         self.assertEqual(response.data['group'][0]['facult_name'], self.teacher.teacher_profile.group.first().facult.name)
 
     def test_update_teacher(self):
+        self.group2 = GroupFactory(
+            facult=GroupFactory.facult,
+            course=GroupFactory.course,
+            podgroup=GroupFactory.podgroup
+        )
         if not self.token:
             self.get_token(self.teacher)
         headers = {'Authorization': f'Bearer {self.token}'}
@@ -230,3 +229,5 @@ class TeacherTest(UsersBaseTest):
             headers=headers, data=data
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['group'][0]['id'], self.group2.id)
+        self.assertNotEquals(response.data['group'][0]['id'], self.group.id)

@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import User, Student, Teacher
 
-from data.serializers import GroupSerializer
+from data.serializers import GroupSerializer, SubjectsSelializers
 
 
 class CustomLoginSerializer(serializers.Serializer):
@@ -66,10 +66,11 @@ class UserSerializer(serializers.ModelSerializer):
 
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     group = serializers.SerializerMethodField('get_group')
+    subjects = serializers.SerializerMethodField('get_subjects')
 
     class Meta:
         model = User
-        fields = ['id', 'first_name', 'last_name', 'email', 'image', 'is_teacher', 'user', 'group']
+        fields = ['id', 'first_name', 'last_name', 'email', 'image', 'is_teacher', 'user', 'group', 'subjects',]
 
     def get_group(self, obj):
         """
@@ -82,6 +83,15 @@ class UserSerializer(serializers.ModelSerializer):
         elif hasattr(obj, 'student_profile') and obj.student_profile.group:
             return GroupSerializer(obj.student_profile.group).data
         return None
+
+    def get_subjects(self, obj):
+        """
+        Возвращает предметы препода.
+        """
+        if obj.is_teacher:
+            return SubjectsSelializers(obj.teacher_profile.subjects.all(), many=True).data
+        else:
+            return None
 
     def create(self, validated_data):
         """
