@@ -5,12 +5,19 @@ import { Header } from './../../components/Header/index';
 import { useContext, useEffect, useState } from "react";
 import { ThemeContext } from "../../components/themeContext";
 import getCookie from "../../components/GetCookie";
+import { AboutTeachers } from "../../components/AboutTeachers";
+import { AboutExams } from './../../components/AboutExams';
+import { AboutSchedule } from "../../components/AboutSchedule";
+import { AboutEducProcess } from './../../components/AboutEducProcess';
+import { TeacherLectures } from "../../components/AboutTeachers/AboutTeacher/TeacherLectures";
 
 function Profile() {
     const accessToken = getCookie("accessToken");
     const { mode } = useContext(ThemeContext);
     const [name, setName] = useState('');
-
+    const [mainPageContent,  setMainPageContent] = useState('teachers');
+    console.log(mainPageContent);
+   
     const headers = {
         'Authorization': `Bearer ${accessToken}`,
         'Content-Type': 'application/json'
@@ -27,6 +34,7 @@ function Profile() {
     //         });
     // })
 
+
     return (
         <div className="profile" style={{background: mode === "light"  ? "#313131" : "#E7E7E7"}}>
             <Header />
@@ -38,17 +46,25 @@ function Profile() {
                         <div className="pr-line"></div>
                     </div>
                         <div className="important_links-pr">
-                            <button>Экзамены</button>
-                            <button>Расписание</button>
-                            <button>Преподаватели</button>
-                            <button>Учебный процесс</button>
-                        </div>
+                        <button onClick={() => setMainPageContent('exams')}>Экзамены</button>
+                        <button onClick={() => setMainPageContent('schedule')}>Расписание</button>
+                        <button onClick={() => setMainPageContent('teachers')}>Преподаватели</button>
+                        <button onClick={() => setMainPageContent('educ_process')}>Учебный процесс</button>
+                    </div>
                 </aside>
                 <main className="profile_main">
                     <div className="pr-main-header">
                         <h1>Забит Ибрагимов<span>Махачкала, Дагестан</span></h1>
+                        <h2><span>Направление:</span> Информационные системы и программирование</h2>
+                        <h3><span>Курс:</span> 3</h3>
+                        <h4><span>Группа:</span> 1</h4>
                     </div>
-                    <div className="pr-main-content"></div>
+                    <div className="pr-main-content">
+                        {mainPageContent === 'teachers' && <AboutTeachers />}
+                        {mainPageContent === 'exams' && <AboutExams />}
+                        {mainPageContent === 'schedule' && <AboutSchedule />}
+                        {mainPageContent === 'educ_process' && <AboutEducProcess />}
+                    </div>
                 </main>
             </div>
         </div>
