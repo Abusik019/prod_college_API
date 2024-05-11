@@ -1,0 +1,24 @@
+.li_docs{
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+}
+
+.li_docs a{
+    font-size: 24px;
+    text-decoration: underline;
+    transition: all .3s ease;
+}
+
+.li_docs a:hover{
+    color: #1aa6e7 !important;
+}
+
+.li_docs h1{
+    font-size: 20px;
+    font-weight: 500;
+
+    color: #FF7A00;
+}

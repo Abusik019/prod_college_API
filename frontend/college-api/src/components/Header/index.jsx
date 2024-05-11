@@ -21,8 +21,8 @@ export const Header = () => {
                 <ul className="navbar">
                     <Link to='/'><li style={{color: mode === "light" ? "#FFF" : "#000"}}>Главная</li></Link>
                     <Link to='/structure'><li style={{color: mode === "light" ? "#FFF" : "#000"}}>Структура колледжа</li></Link>
-                    <Link to='/'><li style={{color: mode === "light" ? "#FFF" : "#000"}}>Нормативные документы</li></Link>
-                    <Link to='/'><li style={{color: mode === "light" ? "#FFF" : "#000"}}>Абитурентам</li></Link>
+                    <Link to='/documents'><li style={{color: mode === "light" ? "#FFF" : "#000"}}>Нормативные документы</li></Link>
+                    <Link to='/applicants'><li style={{color: mode === "light" ? "#FFF" : "#000"}}>Абитуриентам</li></Link>
                 </ul>
             </div>
         </div>

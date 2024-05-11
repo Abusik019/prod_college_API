@@ -1,0 +1,138 @@
+.profile {
+    width: 80%;
+    height: 100vh;
+}
+
+.profile_container {
+    box-sizing: border-box;
+    padding: 70px 70px 0 70px;
+
+    height: 81%;
+
+    display: flex;
+}
+
+.profile_aside {
+    width: 25%;
+    height: 100%;
+}
+
+.profile_aside img {
+    width: 100%;
+    height: 50%;
+
+    object-fit: cover;
+
+    border-radius: 3px;
+
+    border: 1px solid #56575a;
+}
+
+.profile_info {
+    display: flex;
+    align-items: center;
+
+    column-gap: 4px;
+
+    margin-top: 20px;
+}
+
+.profile_info h1 {
+    font-size: 16px;
+    font-weight: 300;
+    white-space: nowrap;
+
+    color: rgb(161, 161, 161);
+}
+
+.profile_info div {
+    width: 100%;
+    height: 1px;
+
+    background-color: rgb(161, 161, 161);
+}
+
+
+.profile_main {
+    width: 75%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.important_links-pr {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+
+    height: 40%;
+
+    margin-top: 10px;
+}
+
+.important_links-pr button {
+    width: 100%;
+    height: 45px;
+
+    transition: all .3s ease-in-out;
+}
+
+.important_links-pr button:hover {
+    color: #f79b46;
+}
+
+.profile_main {
+    padding: 0 70px 35px 70px;
+    box-sizing: border-box;
+}
+
+.pr-main-header {
+    height: 30%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.pr-main-header h1 {
+    font-size: 28px;
+    font-weight: 300;
+
+    display: flex;
+    align-items: center;
+}
+
+.pr-main-header h1 span {
+    background-image: url('../../assets/icons8-маркер-48.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+
+    padding-left: 25px;
+    margin-left: 30px;
+    font-size: 16px;
+}
+
+.pr-main-header h2,
+h3,
+h4 {
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.pr-main-header h2 span,
+h3 span,
+h4 span {
+    font-size: 18px;
+    font-weight: 400;
+    margin-right: 10px;
+}
+
+.pr-main-content {
+    height: 65%;
+    background-color: #b9b9b9;
+
+    border-radius: 7px;
+
+    box-sizing: border-box;
+    padding: 30px;
+}

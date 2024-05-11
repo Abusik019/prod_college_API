@@ -1,0 +1,9 @@
+.applicants_link{
+    font-size: 24px;
+    text-decoration: underline;
+    transition: all .3s ease;
+}
+
+.applicants_link:hover{
+    color: #1aa6e7 !important;
+}

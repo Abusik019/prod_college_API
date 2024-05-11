@@ -1,15 +1,53 @@
+import axios from 'axios'
+
 import "./style.css";
-import darkLogo from "../../assets/logo.png";
-import lightLogo from "../../assets/light-logo.png";
-import { Link } from "react-router-dom";
-import { useContext } from "react";
+
+import { Link, useNavigate } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+
 import { ThemeContext } from "../../components/themeContext";
 import { ToggleThemeBtn } from "../../components/ToggleThemeBtn";
+import getCookie from './../../components/GetCookie/index.js';
+
+import darkLogo from "../../assets/logo.png";
+import lightLogo from "../../assets/light-logo.png";
 import darkUser from "../../assets/darkuser.png";
 import lightUser from "../../assets/lightuser.png";
 
+
 export default function Login() {
+    const navigate  = useNavigate();
     const { mode } = useContext(ThemeContext);
+    const [username, setUsername] = useState("");
+    const [userSurname, setUserSurname] = useState("");
+    const [userPassword, setUserPassword] = useState("");
+
+    useEffect(() => {
+        const accessToken = getCookie("accessToken");
+        if (accessToken) {
+            navigate("/profile");
+        }
+    }, []);
+
+    function sendUserData(e) {
+        e.preventDefault();
+
+        axios.post("https://d7a6-185-244-21-185.ngrok-free.app/api/token/", {
+                first_name: username,
+                last_name: userSurname,
+                college_id: userPassword,
+            })
+            .then((response) => {
+                console.log(response);
+                if(response.status){
+                    document.cookie = `accessToken=${response.data.access}`;
+                    navigate("/profile");
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
 
     return (
         <div
@@ -39,49 +77,69 @@ export default function Login() {
                 <div className="shape second"></div>
 
                 <form className="loginForm">
-                    <div className="imageWrapper"><img src={mode === "light" ? lightUser : darkUser}/></div>
-                    <label htmlFor="username" style={{ color: mode === "light" ? "#fff" : "#000" }}>
+                    <div className="imageWrapper">
+                        <img src={mode === "light" ? lightUser : darkUser} />
+                    </div>
+                    <label
+                        htmlFor="username"
+                        style={{ color: mode === "light" ? "#fff" : "#000" }}
+                    >
                         Имя
                         <input
                             type="text"
                             placeholder="Имя"
                             id="username"
-                            style={{ color: mode === "light" ? "#fff" : "#000" }}
+                            style={{
+                                color: mode === "light" ? "#fff" : "#000",
+                            }}
+                            onChange={(e) => {
+                                setUsername(e.target.value);
+                            }}
                         />
                     </label>
-                    <label htmlFor="password" style={{ color: mode === "light" ? "#fff" : "#000" }}>
+                    <label
+                        htmlFor="surname"
+                        style={{ color: mode === "light" ? "#fff" : "#000" }}
+                    >
                         Фамилия
                         <input
-                            type="password"
+                            type="text"
                             placeholder="Фамилия"
-                            id="password"
-                            style={{ color: mode === "light" ? "#fff" : "#000"}}
+                            id="surname"
+                            style={{
+                                color: mode === "light" ? "#fff" : "#000",
+                            }}
+                            onChange={(e) => {
+                                setUserSurname(e.target.value);
+                            }}
                         />
                     </label>
-                    <label htmlFor="password" style={{ color: mode === "light" ? "#fff" : "#000" }}>
+                    <label
+                        htmlFor="password"
+                        style={{ color: mode === "light" ? "#fff" : "#000" }}
+                    >
                         Пароль
                         <input
                             type="password"
                             placeholder="Номер зачетной книжки или пароль"
                             id="password"
-                            style={{ color: mode === "light" ? "#fff" : "#000" }}
+                            style={{
+                                color: mode === "light" ? "#fff" : "#000",
+                            }}
+                            onChange={(e) => {
+                                setUserPassword(e.target.value);
+                            }}
                         />
                     </label>
-                    <button type="submit" className="submitForm">Войти</button>
+                    <button
+                        type="submit"
+                        className="submitForm"
+                        onClick={sendUserData}
+                    >
+                        Войти
+                    </button>
                 </form>
             </div>
-            
-            {/* <form name="login_form" className="login_form">
-                <h1 style={{color: mode === "light" ? "#FFF" : "#000"}}>Войдите в свой аккаунт</h1>
-                <label style={{color: mode === "light" ? "#FFF" : "#000"}}>Имя</label>
-                <input name="name" type="text" required/>
-                <label style={{color: mode === "light" ? "#FFF" : "#000"}}>Фамилия</label>
-                <input name="surname" type="text" required/>
-                <label style={{color: mode === "light" ? "#FFF" : "#000"}}>Номер зачетной книжки</label>
-                <input name="id" type="text" required/>
-                <button className="choose_role">Преподаватель</button>
-                <button className="login_btn">Войти</button>
-            </form> */}
         </div>
     );
 }
