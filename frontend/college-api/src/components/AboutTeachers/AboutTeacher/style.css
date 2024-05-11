@@ -1,0 +1,59 @@
+.teachers_container li{
+    height: 25%;
+    width: 95%;
+
+    background-color: #D3D3D3;
+
+    border-radius: 12px;
+
+    box-shadow: 5px 3px 5px 0px rgba(69,69,69,0.75);
+
+    box-sizing: border-box;
+    padding: 5px 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    cursor: pointer;
+}
+
+
+.teachers_container li img{
+    height: 100%;
+    width: 80px;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+}
+
+.tc-text{
+    text-align: center;
+}
+
+.tc-text h1{
+    color: black;
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.tc-text h2 {
+    color: #6C6C6C;
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.teachers_container_child button{
+    background-color: transparent;
+
+    border: none;
+    outline: none;
+
+    padding: 0;
+}
+
+.teachers_container_child button img{
+    width: 50px;
+    border-radius: 0;
+}
