@@ -1,5 +1,6 @@
 import "./style.css";
 import backBtn from "../../../../assets/back_btn.png";
+import readBtn from "../../../../assets/read.png";
 import { useEffect, useState } from "react";
 import { AboutTeachers } from '../../../AboutTeachers';
 
@@ -32,24 +33,39 @@ export const TeacherLectures = () => {
                 <div className="l-list_line"></div>
                 <ul className="l-list_btm_side"  style={{ overflowY: isOverflowing ? "scroll" : "auto"}}>
                     <li>
-                        <h1>Название лекции</h1>
-                        <button>Читать</button>
+                        <div className="l-list_text_cont">
+                            <h1>Название лекции</h1>
+                            <h2>25.05.2020</h2>
+                        </div>
+                        <button><img src={readBtn}/></button>
                     </li>
                     <li>
-                        <h1>Название лекции</h1>
-                        <button>Читать</button>
+                        <div className="l-list_text_cont">
+                            <h1>Название лекции</h1>
+                            <h2>25.05.2020</h2>
+                        </div>
+                        <button><img src={readBtn}/></button>
                     </li>
                     <li>
-                        <h1>Название лекции</h1>
-                        <button>Читать</button>
+                        <div className="l-list_text_cont">
+                            <h1>Название лекции</h1>
+                            <h2>25.05.2020</h2>
+                        </div>
+                        <button><img src={readBtn}/></button>
                     </li>
                     <li>
-                        <h1>Название лекции</h1>
-                        <button>Читать</button>
+                        <div className="l-list_text_cont">
+                            <h1>Название лекции</h1>
+                            <h2>25.05.2020</h2>
+                        </div>
+                        <button><img src={readBtn}/></button>
                     </li>
                     <li>
-                        <h1>Название лекции</h1>
-                        <button>Читать</button>
+                        <div className="l-list_text_cont">
+                            <h1>Название лекции</h1>
+                            <h2>25.05.2020</h2>
+                        </div>
+                        <button><img src={readBtn}/></button>
                     </li>
                 </ul>
             </div>
