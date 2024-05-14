@@ -77,8 +77,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    cursor: pointer;
 }
 
 .l-list_btm_side li button{

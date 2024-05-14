@@ -1,9 +1,9 @@
 import "./style.css";
 
-export const AboutExams = () => {
+export const AboutLectures = () => {
   return (
     <div className="exams_container">
-      AboutExams
+      AboutLectures
     </div>
   )
 }

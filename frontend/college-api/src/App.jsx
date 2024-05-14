@@ -6,6 +6,8 @@ import Structure from './pages/Structure';
 import Documents from './pages/Docs';
 import Applicants from "./pages/Applicants";
 import Profile from "./pages/Profile";
+import Lecture from './pages/Lecture';
+import TeacherProfile from './pages/TeacherProfile'
 
 
 function App() {
@@ -17,6 +19,8 @@ function App() {
             <Route path='/documents' element={<Documents />}/>
             <Route path='/applicants' element={<Applicants />}/>
             <Route path='/profile' element={<Profile />}/>
+            <Route path='/lecture' element={<Lecture />}/>
+            <Route path='/teacher-profile' element={<TeacherProfile />}/>
         </Routes>
     );
 }

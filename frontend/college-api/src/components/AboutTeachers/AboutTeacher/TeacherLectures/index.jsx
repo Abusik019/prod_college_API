@@ -3,6 +3,34 @@ import backBtn from "../../../../assets/back_btn.png";
 import readBtn from "../../../../assets/read.png";
 import { useEffect, useState } from "react";
 import { AboutTeachers } from '../../../AboutTeachers';
+import { Link } from 'react-router-dom';
+
+const data = [
+    {
+      'name': 'Название лекции',
+      'date': '25.05.2020'  
+    },
+    {
+      'name': 'Название лекции',
+      'date': '25.05.2020'  
+    },
+    {
+      'name': 'Название лекции',
+      'date': '25.05.2020'  
+    },
+    {
+      'name': 'Название лекции',
+      'date': '25.05.2020'  
+    },
+    {
+      'name': 'Название лекции',
+      'date': '25.05.2020'  
+    },
+    {
+      'name': 'Название лекции',
+      'date': '25.05.2020'  
+    },
+]
 
 export const TeacherLectures = () => {
     const [back, setBack] = useState(false);
@@ -16,7 +44,6 @@ export const TeacherLectures = () => {
             setIsOverflowing(false);
         }
     }, []);
-
 
     return (
         <>
@@ -32,41 +59,15 @@ export const TeacherLectures = () => {
                 </div>
                 <div className="l-list_line"></div>
                 <ul className="l-list_btm_side"  style={{ overflowY: isOverflowing ? "scroll" : "auto"}}>
-                    <li>
-                        <div className="l-list_text_cont">
-                            <h1>Название лекции</h1>
-                            <h2>25.05.2020</h2>
-                        </div>
-                        <button><img src={readBtn}/></button>
-                    </li>
-                    <li>
-                        <div className="l-list_text_cont">
-                            <h1>Название лекции</h1>
-                            <h2>25.05.2020</h2>
-                        </div>
-                        <button><img src={readBtn}/></button>
-                    </li>
-                    <li>
-                        <div className="l-list_text_cont">
-                            <h1>Название лекции</h1>
-                            <h2>25.05.2020</h2>
-                        </div>
-                        <button><img src={readBtn}/></button>
-                    </li>
-                    <li>
-                        <div className="l-list_text_cont">
-                            <h1>Название лекции</h1>
-                            <h2>25.05.2020</h2>
-                        </div>
-                        <button><img src={readBtn}/></button>
-                    </li>
-                    <li>
-                        <div className="l-list_text_cont">
-                            <h1>Название лекции</h1>
-                            <h2>25.05.2020</h2>
-                        </div>
-                        <button><img src={readBtn}/></button>
-                    </li>
+                    {data.map((item, index) => (
+                        <li key={index}>
+                            <div className="l-list_text_cont">
+                                <h1>{item.name}</h1>
+                                <h2>{item.date}</h2>
+                            </div>
+                            <Link to="/lecture"><button><img src={readBtn}/></button></Link>
+                        </li>
+                    ))} 
                 </ul>
             </div>
             {back && <AboutTeachers />}

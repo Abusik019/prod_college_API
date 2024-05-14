@@ -6,6 +6,7 @@ import user from "../../assets/user.svg";
 import { ToggleThemeBtn } from './../ToggleThemeBtn/index';
 import { useContext } from "react";
 import { ThemeContext } from "../themeContext";
+import getCookie from './../GetCookie/index';
 
 export const Header = () => {
     const { mode } = useContext(ThemeContext);
@@ -14,8 +15,13 @@ export const Header = () => {
         <div className="header">
             <div className="top_block" style={{background: mode === "light" ? "linear-gradient(180deg, #4B4848 0%, #1C1B1B 100%)" : "linear-gradient(180deg, #F1F1F1 0%, #999999 100%)"}}>
                 <ToggleThemeBtn left="20px" top="50px"/>
-                <img src={mode === 'light' ? darkLogo : lightLogo} className="mainLogo"/>
-                <Link to="/login" className="userImage"><img src={user}/></Link>
+                <Link to="/">
+                    <img
+                        src={mode === "light" ? darkLogo : lightLogo}
+                        className="mainLogo"
+                    />
+                </Link>
+                <Link to={getCookie('accessToken') ? '/profile' : 'login'} className="userImage"><img src={user}/></Link>
             </div>
             <div className="bottom_block" style={{background: mode === "light" ? "#2A2A2A" : "#CCCCCC"}}>
                 <ul className="navbar">

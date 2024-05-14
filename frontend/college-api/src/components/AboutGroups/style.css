@@ -1,0 +1,51 @@
+.groups{
+    height: 100%;
+}
+
+.groups_header{
+    height: 10%;
+
+    display: flex;
+    justify-content: center;
+
+    position: relative;
+}
+
+.groups-hd_choice{
+    background-color: #DFDFDF;
+    border-radius: 20px;
+
+    width: 40%;
+
+    display: flex;
+}
+
+.groups-hd_choice button{
+    background-color: transparent;
+    border-radius: 20px;
+    height: 100%;
+
+    width: 50%;
+
+    transition: all .2s ease-in-out;
+
+    color: black;
+
+    padding: 0;
+}
+
+.change_group{
+    position: absolute;
+
+    right: 0;
+}
+
+.change_group{
+    background-color: transparent;
+
+    color: #FF7A00;
+    font-size: 20px;
+    font-weight: 400;
+
+    text-decoration: underline;
+}

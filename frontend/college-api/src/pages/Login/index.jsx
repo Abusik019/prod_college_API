@@ -1,47 +1,61 @@
-import axios from 'axios'
-
+import axios from "axios";
 import "./style.css";
-
 import { Link, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-
 import { ThemeContext } from "../../components/themeContext";
 import { ToggleThemeBtn } from "../../components/ToggleThemeBtn";
-import getCookie from './../../components/GetCookie/index.js';
-
+import getCookie from "./../../components/GetCookie/index.js";
 import darkLogo from "../../assets/logo.png";
 import lightLogo from "../../assets/light-logo.png";
 import darkUser from "../../assets/darkuser.png";
 import lightUser from "../../assets/lightuser.png";
 
-
 export default function Login() {
-    const navigate  = useNavigate();
+    const navigate = useNavigate();
     const { mode } = useContext(ThemeContext);
     const [username, setUsername] = useState("");
     const [userSurname, setUserSurname] = useState("");
     const [userPassword, setUserPassword] = useState("");
+    const [accessToken, setAccessToken] = useState(getCookie("accessToken"));
+    const headers = {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+    };
 
     useEffect(() => {
-        const accessToken = getCookie("accessToken");
         if (accessToken) {
-            navigate("/profile");
+            checkUserRole();
         }
-    }, []);
+    }, [accessToken]);
+
+    function checkUserRole() {
+        axios.get("http://127.0.0.1:8000/api/v1/users/current_user", { headers })
+            .then((response) => {
+                console.log(response);
+                if (response.data.is_teacher) {
+                    navigate("/teacher-profile");
+                } else {
+                    navigate("/profile");
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
 
     function sendUserData(e) {
         e.preventDefault();
 
-        axios.post("https://d7a6-185-244-21-185.ngrok-free.app/api/token/", {
+        axios
+            .post(`http://127.0.0.1:8000/api/token/`, {
                 first_name: username,
                 last_name: userSurname,
                 college_id: userPassword,
             })
-            .then((response) => {
-                console.log(response);
-                if(response.status){
+            .then((response) => {   
+                if (response.status === 200) {
                     document.cookie = `accessToken=${response.data.access}`;
-                    navigate("/profile");
+                    setAccessToken(response.data.access);
                 }
             })
             .catch((error) => {
