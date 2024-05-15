@@ -15,6 +15,8 @@ function Profile() {
     const accessToken = getCookie("accessToken");
     const { mode } = useContext(ThemeContext);
     const [name, setName] = useState('');
+    const [surname, setSurname] = useState('');
+    const [subject, setSubject] = useState('');
     const [mainPageContent,  setMainPageContent] = useState('teachers');
    
     const headers = {
@@ -22,16 +24,18 @@ function Profile() {
         'Content-Type': 'application/json'
       };
 
-    // useEffect(() => {
-    //     axios.get("https://d7a6-185-244-21-185.ngrok-free.app/api/v1/users/current_user", { headers })
-    //         .then((response) => {
-    //             console.log(response);
-    //             setName(response.data.first_name);
-    //         })
-    //         .catch((error) => {
-    //             console.log(error);
-    //         });
-    // })
+    useEffect(() => {
+        axios.get("http://127.0.0.1:8000/api/v1/users/current_user", { headers })
+            .then((response) => {
+                setName(response.data.first_name);
+                setSurname(response.data.last_name);
+                // setSubject(response.data.group.facult_name);
+                console.log(response);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    })
 
 
     return (
@@ -53,8 +57,8 @@ function Profile() {
                 </aside>
                 <main className="profile_main">
                     <div className="pr-main-header-t">
-                        <h1>Забит Ибрагимович<span>Махачкала, Дагестан</span></h1>
-                        <h2><span>Специальность:</span> Информационные системы и программирование</h2>
+                        <h1>{name} {surname}<span>Махачкала, Дагестан</span></h1>
+                        <h2><span>Специальность:</span> {subject}</h2>
                     </div>
                     <div className="pr-main-content-t">
                         {mainPageContent === 'exams' && <AboutExams />}
