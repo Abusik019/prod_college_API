@@ -4,12 +4,29 @@ import darkLogo from "../../assets/logo.png";
 import lightLogo from "../../assets/light-logo.png"
 import user from "../../assets/user.svg";
 import { ToggleThemeBtn } from './../ToggleThemeBtn/index';
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ThemeContext } from "../themeContext";
 import getCookie from './../GetCookie/index';
+import axios from "axios";
 
 export const Header = () => {
     const { mode } = useContext(ThemeContext);
+    const accessToken = getCookie('accessToken')
+    const [isTeacher, setIsTeacher] = useState(false);
+    const headers = {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+    };
+
+    useEffect(() => {
+        axios.get("http://127.0.0.1:8000/api/v1/users/current_user", { headers })
+            .then((response) => {
+                setIsTeacher(response.data.is_teacher);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, []);
 
     return (
         <div className="header">
@@ -21,7 +38,7 @@ export const Header = () => {
                         className="mainLogo"
                     />
                 </Link>
-                <Link to={getCookie('accessToken') ? '/profile' : 'login'} className="userImage"><img src={user}/></Link>
+                <Link to={getCookie('accessToken') ? isTeacher ? '/teacher-profile' : '/profile' : 'login'} className="userImage"><img src={user}/></Link>
             </div>
             <div className="bottom_block" style={{background: mode === "light" ? "#2A2A2A" : "#CCCCCC"}}>
                 <ul className="navbar">
