@@ -13,7 +13,7 @@
 
 .groups-hd_choice{
     background-color: #DFDFDF;
-    border-radius: 20px;
+    border-radius: 30px;
 
     width: 40%;
 
@@ -48,4 +48,66 @@
     font-weight: 400;
 
     text-decoration: underline;
+}
+
+.groups_main_content{
+    height: 90%;
+
+    padding: 30px 20px 0 20px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+.groups_main_content li{
+    width: 100%;
+    background-color: #DBDBDB;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    border-radius: 11px;
+}
+
+.groups_main_content li h1,h2,h3{
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 40px;
+    
+    color: black;
+
+    text-align: center;
+
+    width: 100px;
+}
+
+.groups_main_content li h1{
+    margin-left: 25%;
+}
+
+.groups_main_content li button{
+    background-color: transparent;
+    color: black;
+
+    font-size: 24px;
+    padding: 0;
+
+    width: 30px;
+    height: 30px;
+
+    border-radius: 50%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    line-height: 0;
+
+    margin-left: 10px;
+
+    cursor: pointer;
 }
