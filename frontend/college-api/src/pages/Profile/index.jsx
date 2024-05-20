@@ -15,24 +15,31 @@ function Profile() {
     const accessToken = getCookie("accessToken");
     const { mode } = useContext(ThemeContext);
     const [name, setName] = useState('');
+    const [surname, setSurname] = useState('');
+    const [facult, setFacult] = useState('');
+    const [group, setGroup] = useState('');
+    const [course, setCourse] = useState('');
     const [mainPageContent,  setMainPageContent] = useState('teachers');
-    console.log(mainPageContent);
    
     const headers = {
         'Authorization': `Bearer ${accessToken}`,
         'Content-Type': 'application/json'
-      };
+    };
 
-    // useEffect(() => {
-    //     axios.get("https://d7a6-185-244-21-185.ngrok-free.app/api/v1/users/current_user", { headers })
-    //         .then((response) => {
-    //             console.log(response);
-    //             setName(response.data.first_name);
-    //         })
-    //         .catch((error) => {
-    //             console.log(error);
-    //         });
-    // })
+    useEffect(() => {
+        axios.get("http://127.0.0.1:8000/api/v1/users/current_user", { headers })
+            .then((response) => {
+                console.log(response);
+                setName(response.data.first_name);
+                setSurname(response.data.last_name);
+                setFacult(response.data.group.facult_name);
+                setGroup(response.data.group.course_name);
+                setCourse(response.data.group.podgroup_name);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    })
 
 
     return (
@@ -46,7 +53,7 @@ function Profile() {
                         <div className="pr-line"></div>
                     </div>
                         <div className="important_links-pr">
-                        <button onClick={() => setMainPageContent('exams')}>Экзамены</button>
+                        <button onClick={() => setMainPageContent('exams')}>Тесты</button>
                         <button onClick={() => setMainPageContent('schedule')}>Расписание</button>
                         <button onClick={() => setMainPageContent('teachers')}>Преподаватели</button>
                         <button onClick={() => setMainPageContent('educ_process')}>Учебный процесс</button>
@@ -54,10 +61,10 @@ function Profile() {
                 </aside>
                 <main className="profile_main">
                     <div className="pr-main-header">
-                        <h1>Забит Ибрагимов<span>Махачкала, Дагестан</span></h1>
-                        <h2><span>Направление:</span> Информационные системы и программирование</h2>
-                        <h3><span>Курс:</span> 3</h3>
-                        <h4><span>Группа:</span> 1</h4>
+                        <h1>{name} {surname}<span>Махачкала, Дагестан</span></h1>
+                        <h2><span>Направление:</span> {facult}</h2>
+                        <h3><span>Курс:</span> {group}</h3>
+                        <h4><span>Группа:</span> {course}</h4>
                     </div>
                     <div className="pr-main-content">
                         {mainPageContent === 'teachers' && <AboutTeachers />}
