@@ -94,7 +94,7 @@
     justify-content: space-between;
 }
 
-.pr-main-header h1 {
+.pr-main-header > h1 {
     font-size: 28px;
     font-weight: 300;
 
@@ -102,7 +102,7 @@
     align-items: center;
 }
 
-.pr-main-header h1 span {
+.pr-main-header > h1 span {
     background-image: url('../../assets/icons8-маркер-48.png');
     background-repeat: no-repeat;
     background-size: contain;
@@ -112,16 +112,41 @@
     font-size: 16px;
 }
 
-.pr-main-header h2,
-h3,
-h4 {
+.pr-main-header h2{
     font-size: 20px;
     font-weight: 400;
+    display: flex;
+    color: white;
+    text-align: left;
 }
 
-.pr-main-header h2 span,
-h3 span,
-h4 span {
+.pr-main-header h3{
+    font-size: 20px;
+    font-weight: 400;
+    color: white;
+    text-align: left;
+}
+
+.pr-main-header h4{
+    font-size: 20px;
+    font-weight: 400;
+    color: white;
+    text-align: left;
+}
+
+.pr-main-header h2 span{
+    font-size: 18px;
+    font-weight: 400;
+    margin-right: 10px;
+}
+
+.pr-main-header h3 span{
+    font-size: 18px;
+    font-weight: 400;
+    margin-right: 10px;
+}
+
+.pr-main-header h4 span{
     font-size: 18px;
     font-weight: 400;
     margin-right: 10px;

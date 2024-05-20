@@ -45,13 +45,14 @@ export default function Login() {
 
     function sendUserData(e) {
         e.preventDefault();
+        
+        const requestData = {
+            first_name: username,
+            last_name: userSurname,
+            college_id: userPassword,
+        };
 
-        axios
-            .post(`http://127.0.0.1:8000/api/token/`, {
-                first_name: username,
-                last_name: userSurname,
-                college_id: userPassword,
-            })
+        axios.post('http://127.0.0.1:8000/api/token/', requestData)
             .then((response) => {   
                 if (response.status === 200) {
                     document.cookie = `accessToken=${response.data.access}`;
