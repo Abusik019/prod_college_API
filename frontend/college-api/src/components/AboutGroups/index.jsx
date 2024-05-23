@@ -66,22 +66,22 @@ export const AboutGroups = () => {
     };
 
     const deleteFromMyGroups = async (groupID) => {
-        const filterGroups = myGroups.filter(group => group.id !== groupID);
-        const filterGroupsByID = filterGroups.map(group => group.id);
-
-        await axios.put(`http://127.0.0.1:8000/api/v1/users/teacher_update/${teacherID}`, { "group_ids": [...filterGroupsByID, groupID]}, { headers })
+        const updatedMyGroups = myGroups.filter(group => group.id !== groupID);
+        const updatedMyGroupsByID = updatedMyGroups.map(group => group.id);
+    
+        await axios.put(`http://127.0.0.1:8000/api/v1/users/teacher_update/${teacherID}`, { "group_ids": updatedMyGroupsByID }, { headers })
             .then(() => {
-                const newGroup = myGroups.find(group => group.id === groupID);
-                const updatedGroups = [...groups, newGroup];
-                setGroups(updatedGroups);
-
-                const updatedMyGroups = myGroups.filter(group => group.id !== groupID);
+                const removedGroup = myGroups.find(group => group.id === groupID);
+                const newGroups = [...groups, removedGroup];
+                setGroups(newGroups.sort((a, b) => a.facult_name.localeCompare(b.facult_name)));
+    
                 setMyGroups(updatedMyGroups);
             })
             .catch((error) => {
-                console.error('Ошибка при добавлении группы преподавателя:', error);
+                console.error('Ошибка при удалении группы преподавателя:', error);
             });
     };
+    
 
     const getSortInfo = useCallback((sortOption) => {
         setSortBy(sortOption);
