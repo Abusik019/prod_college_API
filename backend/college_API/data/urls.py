@@ -1,10 +1,10 @@
 from django.urls import path
-from .views import group_list, GroupMembersView, subjects_list, CreateLectureView, TeacherLecturesView, MyLecturesView, \
+from .views import GroupListView, GroupMembersView, subjects_list, CreateLectureView, TeacherLecturesView, MyLecturesView, \
     LectureDetailView, DeleteLectureView, UpdateLectureView
 
 urlpatterns = [
     # Эндпоинты для групп
-    path('get_groups', group_list, name='group_list'),  # Все группы
+    path('get_groups', GroupListView.as_view(), name='group_list'),  # Все группы
     path('group_members/<int:pk>/', GroupMembersView.as_view(), name='group_members'),  # Члены группы
     path('get_subjects/', subjects_list, name='subjects_list'),   # Все дисциплины
 
