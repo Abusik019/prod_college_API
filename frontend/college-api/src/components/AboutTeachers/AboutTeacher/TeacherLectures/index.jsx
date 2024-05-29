@@ -1,7 +1,7 @@
 import "./style.css";
 import backBtn from "../../../../assets/back_btn.png";
 import readBtn from "../../../../assets/read.png";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AboutTeachers } from '../../../AboutTeachers';
 import { Link } from 'react-router-dom';
 
@@ -34,16 +34,6 @@ const data = [
 
 export const TeacherLectures = () => {
     const [back, setBack] = useState(false);
-    const [isOverflowing, setIsOverflowing] = useState(false);
-
-    useEffect(() => {
-        const list = document.querySelector(".l-list_btm_side");
-        if (list && list.childNodes.length > 3) {
-            setIsOverflowing(true);
-        } else {
-            setIsOverflowing(false);
-        }
-    }, []);
 
     return (
         <>
@@ -58,7 +48,7 @@ export const TeacherLectures = () => {
                     </div>
                 </div>
                 <div className="l-list_line"></div>
-                <ul className="l-list_btm_side"  style={{ overflowY: isOverflowing ? "scroll" : "auto"}}>
+                <ul className="l-list_btm_side">
                     {data.map((item, index) => (
                         <li key={index}>
                             <div className="l-list_text_cont">

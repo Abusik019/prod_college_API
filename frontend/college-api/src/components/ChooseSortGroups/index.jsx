@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Checkbox, Divider } from "antd";
 
 const CheckboxGroup = Checkbox.Group;
-const plainOptions = ["Курс", "Группа", "Подгруппа"];
+const plainOptions = ["Факультет", "Курс", "Подгруппа"];
 const defaultCheckedList = [];
 
 export const ChooseSortGroups = ({ getSortInfo }) => {

@@ -1,35 +1,62 @@
 import "./style.css";
 import axios from "axios";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import getCookie from './../GetCookie/index';
-import { ChooseSortGroups } from './../ChooseSortGroups/index';
+import { ChooseSortGroups } from './../ChooseSortGroups';
+
+const sortFunctions = {
+    'Факультет': (a, b) => a.facult_name.localeCompare(b.facult_name),
+    'Курс': (a, b) => a.course_name - b.course_name,
+    'Подгруппа': (a, b) => a.podgroup_name - b.podgroup_name,
+};
 
 export const AboutGroups = () => {
     const [btnBgF, setbtnBgF] = useState('focus');
     const [btnBgS, setbtnBgS] = useState('nofocus');
     const [groups, setGroups] = useState([]);
     const [myGroups, setMyGroups] = useState([]);
-    const [isOverflowing, setIsOverflowing] = useState(false);
     const [showGroups, setShowGroups] = useState(true);
     const [showMyGroups, setShowMyGroups] = useState(false);
     const [teacherID, setTeacherID] = useState('');
     const accessToken = getCookie("accessToken");
-    const [sortBy, setSortBy] = useState([]);
+    const [sortCriteria, setSortCriteria] = useState([]);
     const headers = {
         'Authorization': `Bearer ${accessToken}`,
         'Content-Type': 'application/json'
     };
 
+    const getSortInfo = (checkedList) => {
+        setSortCriteria(checkedList);
+    };
+
+    const sortedGroups = [...groups].sort((a, b) => {
+        for (const criteria of sortCriteria) {
+            const compareResult = sortFunctions[criteria](a, b);
+            if (compareResult !== 0) {
+                return compareResult;
+            }
+        }
+        return 0;
+    });
+
+    const sortedMyGroups = [...myGroups].sort((a, b) => {
+        for (const criteria of sortCriteria) {
+            const compareResult = sortFunctions[criteria](a, b);
+            if (compareResult !== 0) {
+                return compareResult;
+            }
+        }
+        return 0;
+    });
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const groupsResponse = await axios.get("http://127.0.0.1:8000/api/v1/data/get_groups", { headers });
-                const sortedGroups = groupsResponse.data.sort((a, b) => a.facult_name.localeCompare(b.facult_name));
-                setGroups(sortedGroups);
+                setGroups(groupsResponse.data);
 
                 const myGroupsResponse = await axios.get("http://127.0.0.1:8000/api/v1/users/my_groups", { headers });
-                const sortedMyGroups = myGroupsResponse.data.sort((a, b) => a.facult_name.localeCompare(b.facult_name));
-                setMyGroups(sortedMyGroups);
+                setMyGroups(myGroupsResponse.data);
 
                 const userResponse = await axios.get("http://127.0.0.1:8000/api/v1/users/current_user", { headers });
                 setTeacherID(userResponse.data.id);
@@ -73,7 +100,7 @@ export const AboutGroups = () => {
             .then(() => {
                 const removedGroup = myGroups.find(group => group.id === groupID);
                 const newGroups = [...groups, removedGroup];
-                setGroups(newGroups.sort((a, b) => a.facult_name.localeCompare(b.facult_name)));
+                setGroups(newGroups);
     
                 setMyGroups(updatedMyGroups);
             })
@@ -81,11 +108,6 @@ export const AboutGroups = () => {
                 console.error('Ошибка при удалении группы преподавателя:', error);
             });
     };
-    
-
-    const getSortInfo = useCallback((sortOption) => {
-        setSortBy(sortOption);
-    }, []);
 
     return (
         <div className="groups">
@@ -126,8 +148,8 @@ export const AboutGroups = () => {
                     <ChooseSortGroups getSortInfo={getSortInfo}/>
                 </div>
             </div>
-            <ul className="groups_main_content" style={{ overflowY: isOverflowing ? "scroll" : "auto", display: showGroups ? 'flex' : 'none'}}>
-                {groups.map(group => (
+            <ul className="groups_main_content" style={{ display: showGroups ? 'flex' : 'none'}}>
+                {sortedGroups.map(group => (
                     <li key={group.id}>
                         <button
                              onClick={() => {
@@ -140,8 +162,8 @@ export const AboutGroups = () => {
                     </li>
                 ))}
             </ul>
-            <ul className="my_groups_main_content" style={{ overflowY: isOverflowing ? "scroll" : "auto", display: showMyGroups ? 'flex' : 'none'}}>
-                {myGroups.map(group => (
+            <ul className="my_groups_main_content" style={{ display: showMyGroups ? 'flex' : 'none'}}>
+                {sortedMyGroups.map(group => (
                     <li key={group.id}>
                         <button
                             onClick={() => {
