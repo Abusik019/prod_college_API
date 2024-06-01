@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Exam, Question, Answer, ExamResult
-from django_celery_beat.models import PeriodicTask, IntervalSchedule
+from django_celery_beat.models import PeriodicTask, IntervalSchedule, CrontabSchedule
 
 
 # Определение класса Inline-модели для ответов
@@ -64,4 +64,20 @@ else:
         interval=schedule,  # Устанавливаем интервал выполнения задачи
         name='EndedExams',  # Устанавливаем имя задачи
         task='tasks.end_expired_exams'  # Устанавливаем функцию-обработчик задачи
+    )
+
+
+# Удаляем существующую задачу с именем 'SendExamResults', если она существует
+existing_send_task = PeriodicTask.objects.filter(name='SendExamResults').first()
+
+if existing_send_task:
+    existing_task.interval = schedule
+    existing_task.task = 'exams.tasks.send_exam_results'
+    existing_task.save()
+else:
+    # Создаем новую задачу
+    PeriodicTask.objects.create(
+        interval=schedule,  # Устанавливаем интервал выполнения задачи
+        name='SendExamResults',  # Устанавливаем имя задачи
+        task='exams.tasks.send_exam_results',  # Устанавливаем функцию-обработчик задачи
     )
