@@ -19,7 +19,7 @@ class QuestionInline(admin.TabularInline):
 # Регистрация модели экзамена в админке
 @admin.register(Exam)
 class ExamAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'start_time', 'end_time')  # Отображаемые поля в списке экзаменов
+    list_display = ('title', 'author', 'start_time', 'end_time', 'ended')  # Отображаемые поля в списке экзаменов
     filter_horizontal = ('groups',)  # Используем фильтр с множественным выбором групп
     inlines = [QuestionInline]  # Добавляем встроенную модель вопросов
 
@@ -49,7 +49,6 @@ class ExamResultAdmin(admin.ModelAdmin):
 # Получаем или создаем интервальное расписание выполнения задачи
 schedule, created = IntervalSchedule.objects.get_or_create(every=60, period=IntervalSchedule.SECONDS)
 
-
 # Проверяем, существует ли уже периодическая задача с именем 'EndedExams'
 existing_task = PeriodicTask.objects.filter(name='EndedExams').first()
 
@@ -60,24 +59,8 @@ if existing_task:
     existing_task.save()  # Сохраняем обновленную задачу
 else:
     # Если задачи еще нет, создаем новую
-    exams = PeriodicTask.objects.create(
-        interval=schedule,  # Устанавливаем интервал выполнения задачи
-        name='EndedExams',  # Устанавливаем имя задачи
-        task='tasks.end_expired_exams'  # Устанавливаем функцию-обработчик задачи
-    )
-
-
-# Удаляем существующую задачу с именем 'SendExamResults', если она существует
-existing_send_task = PeriodicTask.objects.filter(name='SendExamResults').first()
-
-if existing_send_task:
-    existing_task.interval = schedule
-    existing_task.task = 'exams.tasks.send_exam_results'
-    existing_task.save()
-else:
-    # Создаем новую задачу
     PeriodicTask.objects.create(
         interval=schedule,  # Устанавливаем интервал выполнения задачи
-        name='SendExamResults',  # Устанавливаем имя задачи
-        task='exams.tasks.send_exam_results',  # Устанавливаем функцию-обработчик задачи
+        name='EndedExams',  # Устанавливаем имя задачи
+        task='exams.tasks.end_expired_exams'  # Устанавливаем функцию-обработчик задачи
     )
