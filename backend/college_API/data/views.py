@@ -1,4 +1,6 @@
+from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.generics import CreateAPIView, ListAPIView, DestroyAPIView, UpdateAPIView, RetrieveAPIView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -9,16 +11,16 @@ from .serializers import GroupSerializer, SubjectsSelializers, CreateLectureSeri
 from users.permissions import IsTeacherPermission
 
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-@cache_page(60)
-def group_list(request):
+@method_decorator(cache_page(60 * 15), name='dispatch')
+class GroupListView(ListAPIView):
     """
-    Функция возвращающая список групп колледжа.
+    Класс возвращающий список групп колледжа.
     """
     queryset = Group.objects.all()
-    serializer = GroupSerializer(queryset, many=True)
-    return Response(serializer.data)
+    serializer_class = GroupSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['facult', 'course', 'podgroup']
 
 
 @api_view(['GET'])

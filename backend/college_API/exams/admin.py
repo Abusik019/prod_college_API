@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Exam, Question, Answer, ExamResult
-from django_celery_beat.models import PeriodicTask, IntervalSchedule
+from django_celery_beat.models import PeriodicTask, IntervalSchedule, CrontabSchedule
 
 
 # Определение класса Inline-модели для ответов
@@ -19,7 +19,7 @@ class QuestionInline(admin.TabularInline):
 # Регистрация модели экзамена в админке
 @admin.register(Exam)
 class ExamAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'start_time', 'end_time')  # Отображаемые поля в списке экзаменов
+    list_display = ('title', 'author', 'start_time', 'end_time', 'ended')  # Отображаемые поля в списке экзаменов
     filter_horizontal = ('groups',)  # Используем фильтр с множественным выбором групп
     inlines = [QuestionInline]  # Добавляем встроенную модель вопросов
 
@@ -49,7 +49,6 @@ class ExamResultAdmin(admin.ModelAdmin):
 # Получаем или создаем интервальное расписание выполнения задачи
 schedule, created = IntervalSchedule.objects.get_or_create(every=60, period=IntervalSchedule.SECONDS)
 
-
 # Проверяем, существует ли уже периодическая задача с именем 'EndedExams'
 existing_task = PeriodicTask.objects.filter(name='EndedExams').first()
 
@@ -60,8 +59,8 @@ if existing_task:
     existing_task.save()  # Сохраняем обновленную задачу
 else:
     # Если задачи еще нет, создаем новую
-    exams = PeriodicTask.objects.create(
+    PeriodicTask.objects.create(
         interval=schedule,  # Устанавливаем интервал выполнения задачи
         name='EndedExams',  # Устанавливаем имя задачи
-        task='tasks.end_expired_exams'  # Устанавливаем функцию-обработчик задачи
+        task='exams.tasks.end_expired_exams'  # Устанавливаем функцию-обработчик задачи
     )
